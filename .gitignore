@@ -1,3 +1,6 @@
+# Built SPA copied into the backend for the single-image build
+backend/webroot/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

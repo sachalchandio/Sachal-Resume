@@ -118,6 +118,27 @@ def not_found(_e):
     return jsonify({"error": "not_found", "message": "No such endpoint."}), 404
 
 
+# --- Single-image production: serve the built React app from ./webroot ---
+# In the combined Docker image, the Vite build is copied here and Flask serves
+# both the API (above) and the SPA (below) on one origin. Absent in local
+# API-only dev, where the React dev server handles the frontend instead.
+WEBROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "webroot")
+
+
+@app.get("/")
+@app.get("/<path:path>")
+def spa(path: str = ""):
+    # The API namespace never falls through to the SPA.
+    if path.startswith("api/"):
+        return jsonify({"error": "not_found", "message": "No such endpoint."}), 404
+    if os.path.isdir(WEBROOT):
+        target = os.path.join(WEBROOT, path)
+        if path and os.path.isfile(target):
+            return send_from_directory(WEBROOT, path)
+        return send_from_directory(WEBROOT, "index.html")  # SPA deep-link fallback
+    return jsonify({"service": "portfolio-api", "try": "/api/portfolio"})
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "5000"))
     app.run(host="0.0.0.0", port=port, debug=bool(os.environ.get("FLASK_DEBUG")))

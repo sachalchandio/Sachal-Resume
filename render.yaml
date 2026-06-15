@@ -1,0 +1,13 @@
+# Render Blueprint — one free web service that serves the React SPA + Flask API.
+# Deploy: render.com → New → Blueprint → connect this repo → Apply.
+services:
+  - type: web
+    name: sachal-portfolio
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: "8000"
