@@ -1,63 +1,88 @@
 # Sachal Chandio — Portfolio
 
-A production-shaped Flask portfolio for a senior backend / DevOps engineer.
-The hero is a live, orbitable **Three.js** model of a multi-provider architecture
-(provider silos streaming into a unified-search core), and the app ships with the
-operational scaffolding the site talks about: a container image, Compose file,
-Kubernetes manifests, and real health endpoints the probes call.
+A two-tier portfolio: a **Flask JSON API** backend and a **React (Vite + TypeScript)**
+single-page frontend. The frontend consumes content from the API and renders two
+routes — the engineering portfolio (`/`) and an off-duty page (`/off-duty`) — with
+two interactive **Three.js** scenes written as React components.
 
-## Stack
-
-- **Backend:** Flask 3 (data-driven Jinja2 templates, JSON API endpoints)
-- **Frontend:** vanilla JS, CSS custom properties, Three.js (CDN, ES modules)
-- **Ops:** Docker, Docker Compose, Kubernetes (liveness/readiness probes), Gunicorn
-
-## Run locally
-
-```bash
-python -m venv venv
-# Windows:  venv\Scripts\activate
-# macOS/Linux:  source venv/bin/activate
-pip install -r requirements.txt
-python app.py
-# → http://localhost:5000
+```
+┌─────────────────┐      /api/portfolio        ┌──────────────────┐
+│  React (Vite)   │  ───────────────────────▶  │   Flask API      │
+│  nginx :80      │      /api/off-duty          │  gunicorn :8000  │
+│  SPA + 3D       │      /api/contact           │  content.py      │
+└─────────────────┘      /resume, /healthz      └──────────────────┘
 ```
 
-## Run with Docker
+## Layout
+
+```
+backend/    Flask API — content.py (data) + app.py (routes), CORS, health probes
+frontend/   React + TypeScript SPA (Vite), Three.js scenes, React Router
+k8s/        Kubernetes manifests (backend + frontend)
+docker-compose.yml
+```
+
+## Run locally (two terminals)
+
+**Backend** — http://localhost:5000
+
+```bash
+cd backend
+pip install -r requirements.txt
+python app.py
+```
+
+**Frontend** — http://localhost:5173 (Vite proxies `/api`, `/resume`, `/healthz` to :5000)
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## Run with Docker (one command)
 
 ```bash
 docker compose up --build
-# → http://localhost:8000
+# → http://localhost:8080
 ```
 
-The image runs Gunicorn as a non-root user and defines a `HEALTHCHECK`
-that hits `/healthz`.
+nginx serves the built React app and proxies `/api`, `/resume`, `/healthz`
+to the Flask backend over the compose network.
 
 ## Deploy to Kubernetes
 
 ```bash
-docker build -t sachal-portfolio:latest .
+docker build -t sachal-portfolio-api:latest ./backend
+docker build -t sachal-portfolio-web:latest ./frontend
 kubectl apply -f k8s/
-kubectl port-forward svc/sachal-portfolio 8080:80
+kubectl port-forward svc/portfolio-frontend 8080:80
 # → http://localhost:8080
 ```
 
-`k8s/deployment.yaml` runs 2 replicas with CPU/memory requests and limits, a
-**liveness** probe on `/healthz`, and a **readiness** probe on `/readyz`.
+Two Deployments (2 replicas each) with resource limits; the backend Service is
+named `backend` so the frontend's nginx upstream resolves in-cluster, and the
+Flask pods expose `/healthz` (liveness) and `/readyz` (readiness) probes.
 
-## Routes
+## API
 
-| Route           | Purpose                                            |
-|-----------------|----------------------------------------------------|
-| `/`             | The portfolio page                                 |
-| `/resume`       | Download the PDF résumé                             |
-| `/api/metrics`  | JSON feed of headline metrics                       |
-| `/api/contact`  | `POST` — validates and logs a contact message       |
-| `/healthz`      | Liveness — process up + uptime                      |
-| `/readyz`       | Readiness — ready to serve traffic                  |
+| Route            | Method | Purpose                                  |
+|------------------|--------|------------------------------------------|
+| `/api/portfolio` | GET    | All data for the main page               |
+| `/api/off-duty`  | GET    | Games, anime, Berserk lines              |
+| `/api/contact`   | POST   | Validate + log a contact message         |
+| `/api/metrics`   | GET    | Headline metrics feed                    |
+| `/resume`        | GET    | Download the PDF résumé                   |
+| `/healthz`       | GET    | Liveness                                 |
+| `/readyz`        | GET    | Readiness                                |
 
 ## Editing content
 
-All copy lives in plain Python structures at the top of [`app.py`](app.py)
-(`PROFILE`, `METRICS`, `CAPABILITIES`, `PROJECTS`, `EXPERIENCE`, `STACK`,
-`EDUCATION`) and renders through Jinja2 — change the data, not the markup.
+All copy lives in [`backend/content.py`](backend/content.py) as plain Python
+structures and is served as JSON — change the data, not the components.
+
+## Adding your photos
+
+Drop `portrait.jpg` and `portrait-2.jpg` into [`frontend/public/`](frontend/public)
+and they appear automatically (About panel and the off-the-clock section). Until
+then a clean `[SC]` monogram stands in.
