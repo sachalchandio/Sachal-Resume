@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+venv/
+.venv/
+.git/
+.gitignore
+*.log
+k8s/
+README.md
+readme.md
+# local dev / screenshot artifacts
+shot*.py
+*.png
+server.log

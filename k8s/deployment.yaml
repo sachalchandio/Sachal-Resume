@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sachal-portfolio
+  labels:
+    app: sachal-portfolio
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sachal-portfolio
+  template:
+    metadata:
+      labels:
+        app: sachal-portfolio
+    spec:
+      containers:
+        - name: portfolio
+          image: sachal-portfolio:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: PORT
+              value: "8000"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "96Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+          # Liveness: restart the pod if the process wedges.
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          # Readiness: only send traffic once the app can serve it.
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8000
+            initialDelaySeconds: 3
+            periodSeconds: 10

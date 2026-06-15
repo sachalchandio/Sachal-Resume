@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block body %}
+<a class="skip-link" href="#work">Skip to work</a>
+
+<!-- ============================== NAV ============================== -->
+<header class="nav" id="top">
+  <a class="brand" href="#top" aria-label="Sachal Chandio — home">
+    <span class="brand-mark">[</span>SC<span class="brand-mark">]</span>
+  </a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="#about">About</a>
+    <a href="#capabilities">Capabilities</a>
+    <a href="#work">Work</a>
+    <a href="#journey">Journey</a>
+    <a href="#stack">Stack</a>
+    <a href="{{ url_for('off_duty') }}">Off-duty</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="nav-cta">
+    <a class="btn btn-ghost" href="{{ profile.links.github }}" target="_blank" rel="noopener">GitHub</a>
+    <a class="btn btn-solid" href="{{ url_for('resume') }}">Résumé ↓</a>
+  </div>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span>
+  </button>
+</header>
+
+<!-- ============================== HERO ============================== -->
+<main>
+<section class="hero" id="hero">
+  <div class="hero-grid">
+    <div class="hero-copy reveal">
+      <p class="eyebrow"><span class="status-dot"></span>{{ profile.availability }}</p>
+      <h1 class="hero-title">
+        {{ profile.headline_lead }}
+        <span class="hl-tail"><span class="rotator" aria-live="polite"><span class="rotator-word">fast</span></span>.</span>
+      </h1>
+      <p class="hero-sub">{{ profile.summary }}</p>
+      <div class="hero-actions">
+        <a class="btn btn-solid btn-lg" href="#work">See the systems →</a>
+        <a class="btn btn-ghost btn-lg" href="#contact">Get in touch</a>
+      </div>
+      <p class="hero-meta">
+        <span>{{ profile.role }}</span>
+        <span class="sep">/</span>
+        <span>{{ profile.focus }}</span>
+        <span class="sep">/</span>
+        <span>{{ profile.location }}</span>
+      </p>
+    </div>
+
+    <div class="hero-stage reveal">
+      <div class="stage-frame">
+        <div class="stage-readout">
+          <span class="readout-label">SYSTEM</span>
+          <span class="readout-value">multi-provider · unified-search</span>
+        </div>
+        <canvas id="scene" aria-hidden="true"></canvas>
+        <noscript><div class="stage-fallback">Interactive architecture model (enable JavaScript)</div></noscript>
+        <div class="stage-legend">
+          <span><i class="dot dot-cyan"></i> provider silo</span>
+          <span><i class="dot dot-violet"></i> sync pipeline</span>
+          <span><i class="dot dot-amber"></i> search core</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metrics strip -->
+  <div class="metrics reveal">
+    {% for m in metrics %}
+    <div class="metric">
+      <div class="metric-value">
+        <span class="metric-prefix">{{ m.prefix }}</span><span class="counter" data-target="{{ m.value }}">0</span><span class="metric-suffix">{{ m.suffix }}</span>
+      </div>
+      <div class="metric-label">{{ m.label }}</div>
+      <div class="metric-note">{{ m.note }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ============================ ABOUT ============================ -->
+<section class="section section-about" id="about">
+  <div class="about-grid">
+    <div class="about-copy reveal">
+      <span class="section-index">00</span>
+      <h2>Backend by trade, system-thinker by habit.</h2>
+      {% for para in about.paragraphs %}<p>{{ para }}</p>{% endfor %}
+    </div>
+    <aside class="about-facts reveal">
+      <div class="about-portrait">
+        <img class="portrait-img" src="{{ url_for('static', filename='img/portrait.jpg') }}"
+             alt="Sachal Chandio"
+             onerror="this.style.display='none'; this.parentElement.classList.add('no-photo');">
+        <div class="about-monogram" aria-hidden="true"><span>[</span>SC<span>]</span></div>
+      </div>
+      <dl>
+        {% for f in about.facts %}
+        <div class="fact">
+          <dt>{{ f.k }}</dt>
+          <dd>{{ f.v }}</dd>
+        </div>
+        {% endfor %}
+      </dl>
+    </aside>
+  </div>
+</section>
+
+<!-- ========================= CAPABILITIES ========================= -->
+<section class="section" id="capabilities">
+  <div class="section-head reveal">
+    <span class="section-index">01</span>
+    <h2>What I do well</h2>
+    <p>Four things I get asked to own — and the tools I reach for.</p>
+  </div>
+  <div class="cap-grid">
+    {% for c in capabilities %}
+    <article class="cap-card tilt reveal">
+      <div class="cap-card-inner">
+        <div class="cap-top">
+          <div class="cap-icon" data-icon="{{ c.icon }}">
+            {% include "icons/" + c.icon + ".svg" %}
+          </div>
+          <span class="cap-no">0{{ loop.index }}</span>
+        </div>
+        <h3>{{ c.title }}</h3>
+        <p>{{ c.body }}</p>
+        <div class="cap-foot">
+          <p class="cap-proof"><span class="cap-proof-mark">→</span>{{ c.proof }}</p>
+          <ul class="chip-row">
+            {% for t in c.tags %}<li class="chip">{{ t }}</li>{% endfor %}
+          </ul>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ============================ WORK ============================ -->
+<section class="section" id="work">
+  <div class="section-head reveal">
+    <span class="section-index">02</span>
+    <h2>Selected work</h2>
+    <p>Real systems in production — the problem, the approach, the impact.</p>
+  </div>
+  <div class="work-list">
+    {% for p in projects %}
+    <article class="work-card accent-{{ p.accent }} reveal" id="{{ p.id }}">
+      <div class="work-main">
+        <header class="work-header">
+          <h3>{{ p.name }}</h3>
+          <p class="work-org">{{ p.org }}</p>
+          <p class="work-tagline">{{ p.tagline }}</p>
+        </header>
+        <div class="work-detail">
+          <div class="work-block">
+            <span class="work-k">Problem</span>
+            <p>{{ p.problem }}</p>
+          </div>
+          <div class="work-block">
+            <span class="work-k">Approach</span>
+            <p>{{ p.approach }}</p>
+          </div>
+        </div>
+        <ul class="chip-row">
+          {% for s in p.stack %}<li class="chip">{{ s }}</li>{% endfor %}
+        </ul>
+      </div>
+      <aside class="work-impact">
+        <span class="work-k">Impact</span>
+        <ul>
+          {% for i in p.impact %}<li>{{ i }}</li>{% endfor %}
+        </ul>
+      </aside>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- =========================== JOURNEY =========================== -->
+<section class="section" id="journey">
+  <div class="section-head reveal">
+    <span class="section-index">03</span>
+    <h2>Deployment history</h2>
+    <p>Where the work shipped — most recent first.</p>
+  </div>
+  <ol class="timeline">
+    {% for e in experience %}
+    <li class="tl-item reveal {% if e.current %}tl-current{% endif %}">
+      <span class="tl-node"></span>
+      <div class="tl-body">
+        <div class="tl-top">
+          <h3>{{ e.role }}</h3>
+          <span class="tl-period">{{ e.period }}</span>
+        </div>
+        <p class="tl-company">{{ e.company }} <span class="sep">·</span> {{ e.location }}</p>
+        <p class="tl-summary">{{ e.summary }}</p>
+        <ul class="chip-row chip-row-sm">
+          {% for s in e.stack %}<li class="chip chip-sm">{{ s }}</li>{% endfor %}
+        </ul>
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+
+<!-- ============================ STACK ============================ -->
+<section class="section" id="stack">
+  <div class="section-head reveal">
+    <span class="section-index">04</span>
+    <h2>Toolbox</h2>
+    <p>The stack I build with, grouped by where it lives.</p>
+  </div>
+  <div class="stack-grid">
+    {% for group, items in stack.items() %}
+    <div class="stack-group reveal">
+      <h3 class="stack-group-title">{{ group }}</h3>
+      <ul class="chip-row">
+        {% for it in items %}<li class="chip">{{ it }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="edu reveal">
+    {% for ed in education %}
+    <div class="edu-row">
+      <span class="edu-degree">{{ ed.degree }}</span>
+      <span class="edu-school">{{ ed.school }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ========================== OFF THE CLOCK ========================== -->
+<section class="section" id="offclock">
+  <div class="offclock-card reveal">
+    <div class="offclock-media">
+      <img class="offclock-img" src="{{ url_for('static', filename='img/portrait-2.jpg') }}"
+           alt="Sachal Chandio off the clock"
+           onerror="this.style.display='none'; this.parentElement.classList.add('no-photo');">
+      <div class="offclock-badge" aria-hidden="true"><span>[</span>SC<span>]</span></div>
+    </div>
+    <div class="offclock-copy">
+      <span class="section-index">05</span>
+      <h2>There’s a human behind the commits.</h2>
+      <p>Off the clock I’m grinding Counter-Strike 2 retakes, riding across the plains in
+         Red Dead Redemption 2, re-reading Berserk for the hundredth time, and posting on
+         YouTube. I keep a whole page of the games and stories that stuck with me.</p>
+      <ul class="chip-row">
+        <li class="chip">Counter-Strike 2</li>
+        <li class="chip">Red Dead Redemption 2</li>
+        <li class="chip">Anime &amp; manga</li>
+        <li class="chip">YouTube</li>
+      </ul>
+      <div class="offclock-actions">
+        <a class="btn btn-solid" href="{{ url_for('off_duty') }}">Meet the off-duty me →</a>
+        <a class="btn btn-ghost" href="{{ youtube }}" target="_blank" rel="noopener">YouTube channel</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== CONTACT =========================== -->
+<section class="section section-contact" id="contact">
+  <div class="contact-card reveal">
+    <div class="contact-copy">
+      <span class="section-index">06</span>
+      <h2>Let’s build something durable.</h2>
+      <p>{{ profile.availability }}. The fastest way to reach me is below.</p>
+      <div class="contact-links">
+        <a href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+        <a href="{{ profile.links.linkedin }}" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="{{ profile.links.github }}" target="_blank" rel="noopener">GitHub</a>
+        <a href="{{ youtube }}" target="_blank" rel="noopener">YouTube</a>
+        <a href="{{ url_for('resume') }}">Résumé (PDF)</a>
+      </div>
+    </div>
+    <form class="contact-form" id="contact-form" novalidate>
+      <div class="field">
+        <label for="cf-name">Name</label>
+        <input id="cf-name" name="name" type="text" autocomplete="name" required>
+        <span class="field-error" data-for="name"></span>
+      </div>
+      <div class="field">
+        <label for="cf-email">Email</label>
+        <input id="cf-email" name="email" type="email" autocomplete="email" required>
+        <span class="field-error" data-for="email"></span>
+      </div>
+      <div class="field">
+        <label for="cf-message">Message</label>
+        <textarea id="cf-message" name="message" rows="4" required></textarea>
+        <span class="field-error" data-for="message"></span>
+      </div>
+      <button class="btn btn-solid btn-lg" type="submit">Send message</button>
+      <p class="form-status" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="footer">
+  <span>© {{ year }} {{ profile.name }}</span>
+  <span class="footer-built">Flask · Three.js · Docker · Kubernetes — <a href="{{ profile.links.github }}" target="_blank" rel="noopener">source</a></span>
+</footer>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/scene.js') }}"></script>
+{% endblock %}
