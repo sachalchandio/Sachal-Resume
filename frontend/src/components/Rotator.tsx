@@ -19,7 +19,7 @@ export default function Rotator({ words }: { words: string[] }) {
   }, [words.length]);
 
   return (
-    <span className="rotator" aria-live="polite">
+    <span className="rotator">
       <span
         className="rotator-word"
         style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(8px)" }}

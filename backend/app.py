@@ -62,6 +62,12 @@ def api_off_duty():
     })
 
 
+@app.get("/api/projects")
+def api_projects():
+    """Work-in-progress projects for the /projects page."""
+    return jsonify({"building": content.BUILDING})
+
+
 @app.get("/api/metrics")
 def api_metrics():
     return jsonify({"metrics": content.METRICS, "generated_at": _now_iso()})

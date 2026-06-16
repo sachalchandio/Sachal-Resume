@@ -27,17 +27,15 @@ export default function Portfolio() {
   const { profile, metrics, capabilities, about, projects, experience, stack, education, youtube } = data;
 
   const links: NavLink[] = [
-    { label: "About", href: "#about" },
-    { label: "Capabilities", href: "#capabilities" },
     { label: "Work", href: "#work" },
-    { label: "Journey", href: "#journey" },
-    { label: "Stack", href: "#stack" },
+    { label: "About", href: "#about" },
+    { label: "Building", href: "/projects", route: true },
     { label: "Off-duty", href: "/off-duty", route: true },
     { label: "Contact", href: "#contact" },
   ];
   const ctas: NavLink[] = [
     { label: "GitHub", href: profile.links.github, external: true },
-    { label: "Résumé ↓", href: "/resume" },
+    { label: "Résumé ↓", href: "/Sachal_Chandio_Resume.pdf" },
   ];
 
   return (
@@ -46,53 +44,55 @@ export default function Portfolio() {
       <Nav brandTo="#top" links={links} ctas={ctas} />
 
       <main>
-        {/* HERO */}
+        {/* HERO — person-forward editorial */}
         <section className="hero" id="hero">
-          <div className="hero-grid">
-            <Reveal className="hero-copy">
-              <p className="eyebrow"><span className="status-dot"></span>{profile.availability}</p>
-              <h1 className="hero-title">
+          <div className="hero-amb" aria-hidden="true"><ArchitectureScene /></div>
+          <div className="hero-amb-veil" aria-hidden="true" />
+
+          <div className="hero-inner">
+            <Reveal className="hero-lead">
+              <p className="hero-eyebrow"><span className="status-dot" aria-hidden="true"></span>{profile.availability}</p>
+              <h1 className="hero-name-xl">Sachal Chandio</h1>
+              <p className="hero-thesis">
                 {profile.headline_lead}{" "}
                 <span className="hl-tail"><Rotator words={profile.headline_rotate} />.</span>
-              </h1>
-              <p className="hero-sub">{profile.summary}</p>
-              <div className="hero-actions">
-                <a className="btn btn-solid btn-lg" href="#work">See the systems →</a>
-                <a className="btn btn-ghost btn-lg" href="#contact">Get in touch</a>
-              </div>
-              <p className="hero-meta">
-                <span>{profile.role}</span><span className="sep">/</span>
-                <span>{profile.focus}</span><span className="sep">/</span>
+              </p>
+              <p className="hero-roleline">
+                <span>{profile.role}</span><i aria-hidden="true" />
+                <span>{profile.focus}</span><i aria-hidden="true" />
                 <span>{profile.location}</span>
               </p>
+              <p className="hero-summary">{profile.summary}</p>
+              <div className="hero-cta">
+                <a className="btn btn-solid btn-lg" href="#work">View the work →</a>
+                <a className="btn btn-ghost btn-lg" href="/Sachal_Chandio_Resume.pdf" download>Résumé ↓</a>
+                <a className="hero-link" href={profile.links.github} target="_blank" rel="noopener">GitHub ↗</a>
+              </div>
             </Reveal>
 
-            <Reveal className="hero-stage">
-              <div className="stage-frame">
-                <div className="stage-readout">
-                  <span className="readout-label">SYSTEM</span>
-                  <span className="readout-value">multi-provider · unified-search</span>
-                </div>
-                <ArchitectureScene />
-                <div className="stage-legend">
-                  <span><i className="dot dot-cyan"></i> provider silo</span>
-                  <span><i className="dot dot-violet"></i> sync pipeline</span>
-                  <span><i className="dot dot-amber"></i> search core</span>
-                </div>
+            <Reveal className="hero-portrait">
+              <div className="hero-portrait-frame">
+                <img
+                  className="hero-portrait-img"
+                  src="/profile.jpg"
+                  alt={profile.name}
+                  onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.parentElement?.classList.add("no-photo"); }}
+                />
+                <span className="hero-portrait-mark" aria-hidden="true">SC</span>
+                <span className="hero-portrait-chip"><span className="status-dot" aria-hidden="true"></span>Open to work</span>
               </div>
             </Reveal>
           </div>
 
-          <Reveal className="metrics">
+          <Reveal className="hero-stats">
             {metrics.map((m) => (
-              <div className="metric" key={m.label}>
-                <div className="metric-value">
-                  <span className="metric-prefix">{m.prefix}</span>
+              <div className="hstat" key={m.label}>
+                <span className="hstat-num">
+                  <span className="hstat-prefix">{m.prefix}</span>
                   <Counter target={m.value} />
-                  <span className="metric-suffix">{m.suffix}</span>
-                </div>
-                <div className="metric-label">{m.label}</div>
-                <div className="metric-note">{m.note}</div>
+                  <span className="hstat-suffix">{m.suffix}</span>
+                </span>
+                <span className="hstat-label">{m.label}</span>
               </div>
             ))}
           </Reveal>
@@ -108,7 +108,7 @@ export default function Portfolio() {
             </Reveal>
             <Reveal as="aside" className="about-facts">
               <Portrait
-                src="/portrait.jpg"
+                src="/profile.jpg"
                 alt="Sachal Chandio"
                 wrapClass="about-portrait"
                 imgClass="portrait-img"
@@ -217,7 +217,7 @@ export default function Portfolio() {
         <section className="section" id="offclock">
           <Reveal className="offclock-card">
             <Portrait
-              src="/portrait-2.jpg"
+              src="/profile.jpg"
               alt="Sachal Chandio off the clock"
               wrapClass="offclock-media"
               imgClass="offclock-img"
@@ -257,7 +257,7 @@ export default function Portfolio() {
                 <a href={profile.links.linkedin} target="_blank" rel="noopener">LinkedIn</a>
                 <a href={profile.links.github} target="_blank" rel="noopener">GitHub</a>
                 <a href={youtube} target="_blank" rel="noopener">YouTube</a>
-                <a href="/resume">Résumé (PDF)</a>
+                <a href="/Sachal_Chandio_Resume.pdf" download>Résumé (PDF)</a>
               </div>
             </div>
             <ContactForm />

@@ -6,6 +6,8 @@ import Nav, { type NavLink } from "../components/Nav";
 import Footer from "../components/Footer";
 import Reveal from "../components/Reveal";
 import CrystalScene from "../three/CrystalScene";
+import GameCarousel from "../components/GameCarousel";
+import AnimePoster from "../components/AnimePoster";
 
 const accent = (color: string) => ({ ["--accent"]: color } as CSSProperties);
 
@@ -46,7 +48,7 @@ export default function OffDuty() {
         <section className="od-hero">
           <CrystalScene />
           <div className="od-hero-inner">
-            <Reveal as="p" className="eyebrow"><span className="status-dot"></span>the human behind the commits</Reveal>
+            <Reveal as="p" className="eyebrow"><span className="status-dot" aria-hidden="true"></span>the human behind the commits</Reveal>
             <Reveal as="h1" className="od-title">
               Off the<br />
               <span className="od-title-accent">terminal.</span>
@@ -67,21 +69,7 @@ export default function OffDuty() {
             <h2>Games on rotation</h2>
             <p>What’s installed, and the honest reason I keep coming back to each one.</p>
           </Reveal>
-          <div className="game-grid">
-            {gaming.map((g) => (
-              <Reveal as="article" className="game-card" style={accent(g.accent)} key={g.title}>
-                <div className="game-spine"></div>
-                <div className="game-body">
-                  <div className="game-top">
-                    <span className="game-kind">{g.kind}</span>
-                    <span className="game-dot" aria-hidden="true"></span>
-                  </div>
-                  <h3>{g.title}</h3>
-                  <p>{g.note}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal><GameCarousel games={gaming} /></Reveal>
         </section>
 
         {/* SHELF */}
@@ -94,21 +82,24 @@ export default function OffDuty() {
           <div className="shelf">
             {anime.map((a, i) => (
               <Reveal as="article" className="anime" style={accent(a.accent)} key={a.title}>
-                <div className="anime-head">
-                  <span className="anime-no">{String(i + 1).padStart(2, "0")}</span>
-                  <div>
-                    <h3 className="anime-title">{a.title}</h3>
-                    <p className="anime-kicker">{a.kicker}</p>
+                <AnimePoster title={a.title} accent={a.accent} />
+                <div className="anime-content">
+                  <div className="anime-head">
+                    <span className="anime-no">{String(i + 1).padStart(2, "0")}</span>
+                    <div>
+                      <h3 className="anime-title">{a.title}</h3>
+                      <p className="anime-kicker">{a.kicker}</p>
+                    </div>
                   </div>
+                  <ul className="quotes">
+                    {a.quotes.map((q, k) => (
+                      <Reveal as="li" className="quote" delay={k * 0.07} key={k}>
+                        <span className="quote-mark">“</span>
+                        <span className="quote-text">{q}</span>
+                      </Reveal>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="quotes">
-                  {a.quotes.map((q, k) => (
-                    <Reveal as="li" className="quote" delay={k * 0.07} key={k}>
-                      <span className="quote-mark">“</span>
-                      <span className="quote-text">{q}</span>
-                    </Reveal>
-                  ))}
-                </ul>
               </Reveal>
             ))}
           </div>

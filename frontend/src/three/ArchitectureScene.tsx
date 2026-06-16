@@ -4,14 +4,31 @@ import * as THREE from "three";
 /**
  * Hero signature: an interactive model of the system Sachal built —
  * provider-silo nodes streaming data into a glowing unified-search core.
- * Drag to spin. Degrades gracefully without WebGL / with reduced motion.
+ * Drag to spin · hover a node to see what it is · scroll to parallax ·
+ * (and the Konami code makes the core remember). Degrades gracefully.
  */
+const LABELS = [
+  "Provider silo", "Provider silo", "Provider silo", "Provider silo", "Provider silo",
+  "Sync pipeline", "Analytics engine", "Notifications", "Commission engine",
+];
+
+interface Hoverable {
+  group: THREE.Group;
+  mesh: THREE.Object3D;
+  wire: THREE.LineSegments;
+  label: string;
+  scale: number; // eased current scale
+}
+
 export default function ArchitectureScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const tipRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const canvasEl = canvasRef.current;
+    const tip = tipRef.current;
+    if (!canvasEl) return;
+    const canvas: HTMLCanvasElement = canvasEl;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     let renderer: THREE.WebGLRenderer;
@@ -33,27 +50,20 @@ export default function ArchitectureScene() {
     const group = new THREE.Group();
     scene.add(group);
 
+    const hoverables: Hoverable[] = [];
+
     // Unified-search core
     const coreGeo = new THREE.IcosahedronGeometry(0.95, 1);
+    const coreSolid = new THREE.Mesh(coreGeo, new THREE.MeshBasicMaterial({ color: AMBER, transparent: true, opacity: 0.12 }));
+    const coreWire = new THREE.LineSegments(new THREE.EdgesGeometry(coreGeo), new THREE.LineBasicMaterial({ color: AMBER, transparent: true, opacity: 0.9 }));
     const core = new THREE.Group();
-    core.add(
-      new THREE.Mesh(coreGeo, new THREE.MeshBasicMaterial({ color: AMBER, transparent: true, opacity: 0.12 })),
-      new THREE.LineSegments(
-        new THREE.EdgesGeometry(coreGeo),
-        new THREE.LineBasicMaterial({ color: AMBER, transparent: true, opacity: 0.9 })
-      )
-    );
+    core.add(coreSolid, coreWire);
     group.add(core);
+    hoverables.push({ group: core, mesh: coreSolid, wire: coreWire, label: "Unified-search core", scale: 1 });
 
-    const halo = new THREE.Sprite(
-      new THREE.SpriteMaterial({
-        map: radialTexture(AMBER),
-        transparent: true,
-        opacity: 0.45,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      })
-    );
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: radialTexture(AMBER), transparent: true, opacity: 0.45, blending: THREE.AdditiveBlending, depthWrite: false,
+    }));
     halo.scale.set(4.2, 4.2, 1);
     group.add(halo);
 
@@ -64,33 +74,28 @@ export default function ArchitectureScene() {
 
     NODES.forEach((color, idx) => {
       const p = fibonacciPoint(idx, NODES.length, R);
-      const geo =
-        idx < SILO ? new THREE.BoxGeometry(0.38, 0.38, 0.38) : new THREE.OctahedronGeometry(0.3, 0);
+      const geo = idx < SILO ? new THREE.BoxGeometry(0.38, 0.38, 0.38) : new THREE.OctahedronGeometry(0.3, 0);
       const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.18 }));
-      mesh.position.copy(p);
-      const wire = new THREE.LineSegments(
-        new THREE.EdgesGeometry(geo),
-        new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.85 })
-      );
-      wire.position.copy(p);
-      group.add(mesh, wire);
+      const wire = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.85 }));
+      const node = new THREE.Group();
+      const glow = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: radialTexture(color), transparent: true, opacity: 0.32,
+        blending: THREE.AdditiveBlending, depthWrite: false,
+      }));
+      glow.scale.setScalar(1.15);
+      node.add(mesh, wire, glow);
+      node.position.copy(p);
+      group.add(node);
+      hoverables.push({ group: node, mesh, wire, label: LABELS[idx], scale: 1 });
 
-      group.add(
-        new THREE.Line(
-          new THREE.BufferGeometry().setFromPoints([p, ZERO]),
-          new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.22 })
-        )
-      );
+      group.add(new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints([p, ZERO]),
+        new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.22 })
+      ));
 
       const pulse = new THREE.Mesh(
         new THREE.SphereGeometry(0.07, 12, 12),
-        new THREE.MeshBasicMaterial({
-          color,
-          transparent: true,
-          opacity: 0.95,
-          blending: THREE.AdditiveBlending,
-          depthWrite: false,
-        })
+        new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false })
       );
       group.add(pulse);
       pulses.push({ mesh: pulse, from: p.clone(), t: (idx * 0.11) % 1, speed: 0.18 + (idx % 4) * 0.05 });
@@ -98,68 +103,116 @@ export default function ArchitectureScene() {
 
     group.add(starfield(160, 9));
 
-    // Drag-to-spin
+    // --- interaction state ---
+    const raycaster = new THREE.Raycaster();
+    const ndc = new THREE.Vector2();
+    const hoverMeshes = hoverables.map((h) => h.mesh);
+    let hovered: Hoverable | null = null;
     let dragging = false;
-    let lastX = 0, lastY = 0;
-    let velX = 0, velY = 0;
-    const onDown = (e: PointerEvent) => {
-      dragging = true;
-      lastX = e.clientX;
-      lastY = e.clientY;
-    };
+    let lastX = 0, lastY = 0, velY = 0;
+    let scrollTilt = 0;
+    let burst = 0;
+
+    const onDown = (e: PointerEvent) => { dragging = true; lastX = e.clientX; lastY = e.clientY; };
+    const onUp = () => { dragging = false; };
     const onMove = (e: PointerEvent) => {
-      if (!dragging) return;
-      velY = (e.clientX - lastX) * 0.005;
-      velX = (e.clientY - lastY) * 0.005;
-      group.rotation.y += velY;
-      group.rotation.x = Math.max(-0.6, Math.min(0.6, group.rotation.x + velX));
-      lastX = e.clientX;
-      lastY = e.clientY;
-    };
-    const onUp = () => {
-      dragging = false;
+      if (dragging) {
+        velY = (e.clientX - lastX) * 0.005;
+        group.rotation.y += velY;
+        group.rotation.x = Math.max(-0.6, Math.min(0.6, group.rotation.x + (e.clientY - lastY) * 0.005));
+        lastX = e.clientX; lastY = e.clientY;
+        return;
+      }
+      const rect = canvas.getBoundingClientRect();
+      ndc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      ndc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(ndc, camera);
+      const hit = raycaster.intersectObjects(hoverMeshes, false)[0];
+      hovered = hit ? hoverables.find((h) => h.mesh === hit.object) ?? null : null;
+      canvas.style.cursor = hovered ? "pointer" : "grab";
     };
     canvas.addEventListener("pointerdown", onDown);
-    window.addEventListener("pointermove", onMove);
+    canvas.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
+    canvas.style.cursor = "grab";
 
-    const resize = () => {
+    const onScroll = () => { scrollTilt = Math.min(1, window.scrollY / 900); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const onKonami = () => { burst = 1; };
+    window.addEventListener("konami", onKonami);
+
+    function resize() {
       const r = canvas.getBoundingClientRect();
       const w = Math.max(1, r.width), h = Math.max(1, r.height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
-    };
+    }
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
 
+    const proj = new THREE.Vector3();
     const clock = new THREE.Clock();
     let raf = 0;
-    const frame = () => {
+    let coreFlash = 0;
+    function frame() {
       const dt = clock.getDelta();
       const t = clock.elapsedTime;
-      if (!dragging) {
-        group.rotation.y += dt * 0.18 + velY;
-        velY *= 0.94;
-        velX *= 0.94;
-      }
+
+      if (burst > 0) burst = Math.max(0, burst - dt * 0.5);
+      if (coreFlash > 0) coreFlash = Math.max(0, coreFlash - dt * 2);
+      if (!dragging) { group.rotation.y += dt * (0.18 + burst * 5) + velY; velY *= 0.94; }
+
       core.rotation.y += dt * 0.4;
       core.rotation.x += dt * 0.15;
-      core.scale.setScalar(1 + Math.sin(t * 1.6) * 0.04);
-      (halo.material as THREE.SpriteMaterial).opacity = 0.38 + Math.sin(t * 1.6) * 0.08;
+      core.scale.setScalar(1 + Math.sin(t * 1.6) * 0.04 + burst * 0.5);
+      (halo.material as THREE.SpriteMaterial).opacity = 0.38 + Math.sin(t * 1.6) * 0.08 + burst * 0.3 + coreFlash;
+      (coreWire.material as THREE.LineBasicMaterial).opacity = 0.9 + coreFlash;
+
+      // ease satellite hover scale + wire glow
+      for (let i = 1; i < hoverables.length; i++) {
+        const h = hoverables[i];
+        const target = h === hovered ? 1.4 : 1;
+        h.scale += (target - h.scale) * 0.18;
+        h.group.scale.setScalar(h.scale);
+        (h.wire.material as THREE.LineBasicMaterial).opacity = h === hovered ? 1 : 0.85;
+      }
+
       pulses.forEach((p) => {
-        p.t += dt * p.speed;
-        if (p.t > 1) p.t -= 1;
+        p.t += dt * p.speed * (1 + burst * 3);
+        if (p.t > 1) { p.t -= 1; coreFlash = Math.min(0.25, coreFlash + 0.08); }
         p.mesh.position.lerpVectors(p.from, ZERO, p.t);
         const fade = Math.sin(p.t * Math.PI);
         (p.mesh.material as THREE.MeshBasicMaterial).opacity = 0.2 + fade * 0.8;
         p.mesh.scale.setScalar(0.6 + fade * 0.9);
       });
+
+      // scroll parallax (camera dolly)
+      const ty = 0.6 - scrollTilt * 1.6, tz = 8 + scrollTilt * 2.6;
+      camera.position.y += (ty - camera.position.y) * 0.08;
+      camera.position.z += (tz - camera.position.z) * 0.08;
+      camera.lookAt(0, 0, 0);
+
+      // tooltip follows the hovered node
+      if (tip) {
+        if (hovered) {
+          hovered.group.getWorldPosition(proj);
+          proj.project(camera);
+          const rect = canvas.getBoundingClientRect();
+          tip.style.left = `${(proj.x * 0.5 + 0.5) * rect.width}px`;
+          tip.style.top = `${(-proj.y * 0.5 + 0.5) * rect.height}px`;
+          tip.textContent = hovered.label;
+          tip.style.opacity = "1";
+        } else {
+          tip.style.opacity = "0";
+        }
+      }
+
       renderer.render(scene, camera);
       if (!reduce) raf = requestAnimationFrame(frame);
-    };
+    }
     if (reduce) renderer.render(scene, camera);
     else raf = requestAnimationFrame(frame);
 
@@ -167,13 +220,20 @@ export default function ArchitectureScene() {
       cancelAnimationFrame(raf);
       ro.disconnect();
       canvas.removeEventListener("pointerdown", onDown);
-      window.removeEventListener("pointermove", onMove);
+      canvas.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("konami", onKonami);
       renderer.dispose();
     };
   }, []);
 
-  return <canvas id="scene" ref={canvasRef} aria-hidden="true" />;
+  return (
+    <>
+      <canvas id="scene" ref={canvasRef} aria-hidden="true" />
+      <div className="scene-tip" ref={tipRef} aria-hidden="true" />
+    </>
+  );
 }
 
 function fibonacciPoint(i: number, n: number, radius: number) {
@@ -195,10 +255,7 @@ function starfield(count: number, spread: number) {
     pos[i * 3 + 2] = (Math.sin(i * 3) * (i % 11)) / 5 - spread / 2;
   }
   geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  return new THREE.Points(
-    geo,
-    new THREE.PointsMaterial({ color: 0x8893ac, size: 0.04, transparent: true, opacity: 0.5 })
-  );
+  return new THREE.Points(geo, new THREE.PointsMaterial({ color: 0x8893ac, size: 0.04, transparent: true, opacity: 0.5 }));
 }
 
 function radialTexture(hexColor: number) {

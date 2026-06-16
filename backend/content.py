@@ -397,3 +397,88 @@ ANIME = [
         ],
     },
 ]
+
+
+# ---------------------------------------------------------------------------
+# Currently building — work-in-progress projects (the /projects page).
+# ---------------------------------------------------------------------------
+
+BUILDING = [
+    {
+        "id": "poe2-upgrade-advisor",
+        "name": "PoE2 Upgrade Advisor",
+        "status": "In active development",
+        "world": "poe2",
+        "tagline": "The single most cost-effective upgrade you can buy right now — "
+                   "backed by the exact damage math the theorycrafting community uses.",
+        "pitch": "A companion web app for Path of Exile 2 that answers the one question "
+                 "every player actually has but no tool answers well: what is the single "
+                 "most cost-effective upgrade I can buy right now? You sign in with your "
+                 "Path of Exile account, the app imports your live character, and it tells "
+                 "you precisely which item on the trade market gives you the biggest "
+                 "improvement for the least currency.",
+        "problem": "Path of Exile 2 has one of the deepest itemization and character "
+                   "systems in gaming, and a player-driven trade economy with millions of "
+                   "listings. The result is a brutal optimization problem: experienced "
+                   "players know their gear is holding them back but have no efficient way "
+                   "to find which upgrade matters most. Existing tooling either shows raw "
+                   "stats with no sense of impact, or requires manually rebuilding your "
+                   "character in a separate desktop calculator. I wanted to collapse that "
+                   "entire workflow — import → simulate → search the market → rank by value "
+                   "→ buy — into a single, fast, intuitive screen.",
+        "does": [
+            {"k": "Imports your real character", "v": "gear, passive tree, and skills, through Path of Exile's official OAuth API. The login is the data source; nothing is typed in by hand."},
+            {"k": "Computes exact stats", "v": "by running your build through the real Path of Building engine, so DPS, effective HP, and resistances are accurate to the game, not approximated."},
+            {"k": "Searches the trade market", "v": "for affordable candidate items per slot, filtered to what's actually relevant to the passives you've chosen."},
+            {"k": "Ranks upgrades by value", "v": "improvement-per-currency, re-simulating each candidate to measure the true gain, weighing survivability alongside raw damage rather than blindly chasing DPS."},
+            {"k": "Hands you a trade link", "v": "It never transacts on your behalf — you stay in full control. It shows the item, its stats, the measured improvement, and the price."},
+        ],
+        "technical": {
+            "title": "I don't reimplement the game's damage math — I reuse the real thing.",
+            "body": "Path of Exile 2's damage and defense calculations are staggeringly "
+                    "complex; any hand-rolled formula drifts from reality and erodes trust. "
+                    "Instead, I vendor the open-source Path of Building engine (a large Lua "
+                    "codebase), run it headless under LuaJIT inside a Docker container, and "
+                    "drive it from my Node backend over a small line-delimited JSON-RPC "
+                    "protocol I built on top of its headless entry point. Character data "
+                    "goes in; exact stats come out. That makes this a genuinely polyglot, "
+                    "multi-process system — a TypeScript application orchestrating a "
+                    "containerized Lua calculation engine as a long-lived subprocess, with a "
+                    "process pool and caching to keep per-candidate simulation fast enough "
+                    "for an interactive experience.",
+        },
+        "features": [
+            {"icon": "🔐", "text": "Official OAuth 2.1 + PKCE authentication against the Path of Exile API (login doubles as the data import)."},
+            {"icon": "🧮", "text": "Exact, engine-accurate stat computation via a headless Path of Building integration."},
+            {"icon": "💸", "text": "Value-based upgrade ranking — an optimization layer scoring improvement per unit of currency."},
+            {"icon": "⚡", "text": "Real-time progress streaming over WebSockets, since evaluating many candidates is a long-running job that should feel alive."},
+            {"icon": "🛒", "text": "Trade-link generation with full item context — actionable, but never auto-purchasing."},
+            {"icon": "🎨", "text": "A responsive, accessible 3D interface designed to work beautifully on desktop and mobile."},
+            {"icon": "🔒", "text": "Encrypted-at-rest token storage (AES-256-GCM) and strict, migration-only database discipline."},
+        ],
+        "stack": {
+            "Frontend": ["React", "Vite", "Tailwind CSS", "react-three-fiber / three.js", "TanStack Query"],
+            "Backend": ["NestJS (TypeScript)", "REST", "WebSockets"],
+            "Calc engine": ["Path of Building (PoE2)", "LuaJIT", "Headless", "Containerized", "JSON-RPC"],
+            "Data": ["MySQL", "TypeORM"],
+            "Infrastructure": ["Docker", "pnpm monorepo", "Shared TS types"],
+            "Integrations": ["PoE OAuth 2.1 API", "PoE Trade API"],
+        },
+        "methodology": [
+            {"k": "Monorepo, strict separation", "v": "Each unit — shared domain types, the calculation service, the API, the web client — has one responsibility and a well-defined interface, testable in isolation."},
+            {"k": "Risk-first, vertical slices", "v": "Sequenced to retire the riskiest unknowns first. The very first deliverable proved the hardest assumption — can a server produce exact Path of Building numbers? — before a line of UI."},
+            {"k": "Test-driven, golden tests", "v": "TDD throughout, including golden tests that pin the engine's output and fail loudly on regression, with integration tests gated behind the container."},
+            {"k": "Isolated volatile deps", "v": "All coupling to the game engine's internals lives behind a single adapter, so upstream changes can't ripple through the codebase."},
+            {"k": "Security by default", "v": "Encrypted credentials, no auto-syncing schemas, and reviewed, CLI-generated database migrations only."},
+            {"k": "Readable code as a deliverable", "v": "Sensibly sized functions, intention-revealing names, comments that explain why, not what — a codebase another engineer can pick up cold."},
+        ],
+        "ambition": "The long-term goal is to become the default first-stop optimization "
+                    "layer for Path of Exile 2: open it, see exactly how to make your "
+                    "character stronger this session, and act in a couple of clicks. The "
+                    "same exact-simulation foundation opens the door to build comparison, "
+                    "what-if gear planning, and goal-driven progression paths — all powered "
+                    "by real game math rather than guesswork.",
+        "accent": "#C0392B",
+        "accentGold": "#D9A441",
+    },
+]

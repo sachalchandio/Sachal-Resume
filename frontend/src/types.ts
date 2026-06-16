@@ -95,3 +95,25 @@ export interface OffDutyData {
   youtube: string;
   profile: { name: string };
 }
+
+export interface ProjectWIP {
+  id: string;
+  name: string;
+  status: string;
+  world: string;
+  tagline: string;
+  pitch: string;
+  problem: string;
+  does: { k: string; v: string }[];
+  technical: { title: string; body: string };
+  features: { icon: string; text: string }[];
+  stack: Record<string, string[]>;
+  methodology: { k: string; v: string }[];
+  ambition: string;
+  accent: string;
+  accentGold: string;
+}
+
+export interface BuildingData {
+  building: ProjectWIP[];
+}
