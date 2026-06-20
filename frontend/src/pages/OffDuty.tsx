@@ -7,13 +7,15 @@ import Footer from "../components/Footer";
 import Reveal from "../components/Reveal";
 import CrystalScene from "../three/CrystalScene";
 import GameCarousel from "../components/GameCarousel";
-import AnimePoster from "../components/AnimePoster";
+import AnimeShelf from "../components/AnimeShelf";
+import { slugify } from "../util";
 
 const accent = (color: string) => ({ ["--accent"]: color } as CSSProperties);
 
 export default function OffDuty() {
   const [data, setData] = useState<OffDutyData | null>(null);
   const [error, setError] = useState(false);
+  const [gameIdx, setGameIdx] = useState(0);
 
   useEffect(() => {
     document.title = "Off-Duty — Sachal Chandio";
@@ -63,13 +65,23 @@ export default function OffDuty() {
         </section>
 
         {/* PLAYING */}
-        <section className="section" id="playing">
+        <section className="section section-playing" id="playing" style={accent(gaming[gameIdx]?.accent || "#4DE3D2")}>
+          <div className="gbg" aria-hidden="true">
+            {gaming.map((g, i) => (
+              <div
+                key={g.title}
+                className={`gbg-layer ${i === gameIdx ? "on" : ""}`}
+                style={{ backgroundImage: `url(/games/${slugify(g.title)}.jpg)` }}
+              />
+            ))}
+            <div className="gbg-veil" />
+          </div>
           <Reveal className="section-head">
             <span className="section-index">01</span>
             <h2>Games on rotation</h2>
             <p>What’s installed, and the honest reason I keep coming back to each one.</p>
           </Reveal>
-          <Reveal><GameCarousel games={gaming} /></Reveal>
+          <Reveal><GameCarousel games={gaming} onActive={setGameIdx} /></Reveal>
         </section>
 
         {/* SHELF */}
@@ -79,30 +91,7 @@ export default function OffDuty() {
             <h2>On the shelf</h2>
             <p>The stories I read between deploys — and five lines from each that stuck.</p>
           </Reveal>
-          <div className="shelf">
-            {anime.map((a, i) => (
-              <Reveal as="article" className="anime" style={accent(a.accent)} key={a.title}>
-                <AnimePoster title={a.title} accent={a.accent} />
-                <div className="anime-content">
-                  <div className="anime-head">
-                    <span className="anime-no">{String(i + 1).padStart(2, "0")}</span>
-                    <div>
-                      <h3 className="anime-title">{a.title}</h3>
-                      <p className="anime-kicker">{a.kicker}</p>
-                    </div>
-                  </div>
-                  <ul className="quotes">
-                    {a.quotes.map((q, k) => (
-                      <Reveal as="li" className="quote" delay={k * 0.07} key={k}>
-                        <span className="quote-mark">“</span>
-                        <span className="quote-text">{q}</span>
-                      </Reveal>
-                    ))}
-                  </ul>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal><AnimeShelf anime={anime} /></Reveal>
         </section>
 
         {/* BERSERK */}

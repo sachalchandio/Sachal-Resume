@@ -603,35 +603,125 @@ p { margin: 0; }
 .game-card h3 { font-size: 1.45rem; margin: 0 0 10px; letter-spacing: -0.02em; }
 .game-card p { color: var(--ink-2); font-size: 0.96rem; line-height: 1.55; }
 
-/* Anime shelf */
-.shelf { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
-.anime {
-  --accent: var(--cyan);
-  border-radius: var(--radius); padding: 28px;
-  border: 1px solid var(--line);
-  border-left: 3px solid var(--accent);
+/* Games section — cinematic crossfading backdrop */
+.section-playing { position: relative; overflow: hidden; }
+.section-playing > *:not(.gbg) { position: relative; z-index: 1; }
+.gbg { position: absolute; inset: 0; z-index: 0; }
+.gbg-layer {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  opacity: 0; transform: scale(1.07);
+  transition: opacity 1.1s var(--ease), transform 8s var(--ease);
+}
+.gbg-layer.on { opacity: 0.42; transform: scale(1); }
+.gbg-veil {
+  position: absolute; inset: 0;
   background:
-    radial-gradient(120% 80% at 0% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 60%),
-    linear-gradient(180deg, var(--surface), rgba(18,24,41,0.35));
-  box-shadow: var(--lift-1);
-  transition: transform .25s, box-shadow .25s;
+    radial-gradient(130% 110% at 50% -10%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%),
+    radial-gradient(120% 100% at 50% 0%, rgba(8,11,20,0.55), rgba(8,11,20,0.93) 78%),
+    linear-gradient(180deg, var(--void) 0%, transparent 24%, transparent 76%, var(--void) 100%);
 }
-.anime:hover { transform: translateY(-3px); box-shadow: var(--lift-2); }
-.anime-head { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 18px; }
-.anime-no {
-  font-family: var(--display); font-weight: 700; font-size: 2rem; line-height: 1;
-  color: var(--accent); opacity: 0.9;
+
+/* Anime shelf — cinematic selector */
+.ashelf {
+  --accent: var(--cyan);
+  position: relative; overflow: hidden;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  background: var(--void-2);
+  box-shadow: var(--lift-2);
+  min-height: 540px;
 }
-.anime-title { font-size: 1.4rem; }
-.anime-kicker { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); margin-top: 6px; }
-.quotes { display: flex; flex-direction: column; gap: 12px; }
-.quote {
+.ashelf-bg { position: absolute; inset: 0; z-index: 0; }
+.ashelf-bg-layer {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  opacity: 0; transform: scale(1.08);
+  transition: opacity 1.1s var(--ease), transform 7s var(--ease);
+}
+.ashelf-bg-layer.on { opacity: 1; transform: scale(1); }
+.ashelf-bg-veil {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, rgba(8,11,20,0.95) 0%, rgba(8,11,20,0.82) 40%, rgba(8,11,20,0.42) 100%),
+    linear-gradient(0deg, rgba(8,11,20,0.9), transparent 55%);
+}
+.ashelf-grid {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 264px 1fr;
+  min-height: 540px;
+}
+.ashelf-tabs {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 16px;
+  border-right: 1px solid color-mix(in srgb, var(--line) 85%, transparent);
+  background: rgba(8,11,20,0.34); backdrop-filter: blur(6px);
+}
+.ashelf-tab {
+  --accent: var(--cyan);
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border-radius: 10px;
+  background: transparent; border: 1px solid transparent;
+  text-align: left; cursor: pointer; color: var(--ink-2);
+  transition: background .25s var(--ease), color .25s var(--ease), border-color .25s;
+}
+.ashelf-tab:hover { color: var(--ink); background: rgba(255,255,255,0.035); }
+.ashelf-tab.on {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 42%, transparent);
+}
+.ashelf-tab-no {
+  font-family: var(--mono); font-size: 0.72rem; color: var(--accent);
+  opacity: 0.65; min-width: 22px;
+}
+.ashelf-tab.on .ashelf-tab-no { opacity: 1; }
+.ashelf-tab-title { font-weight: 600; font-size: 0.96rem; letter-spacing: -0.01em; }
+.ashelf-stage {
+  display: grid; grid-template-columns: 200px 1fr; gap: 30px;
+  align-items: center; padding: clamp(24px, 4vw, 46px);
+}
+.ashelf-poster {
+  position: relative; aspect-ratio: 2 / 3; border-radius: 12px; overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+  box-shadow: 0 26px 64px -26px rgba(0,0,0,0.88);
+  background: var(--void);
+  animation: ashelf-poster-in .7s var(--ease) both;
+}
+.ashelf-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ashelf-poster-mark {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-family: var(--display); font-weight: 700; font-size: 3.2rem; color: var(--accent);
+  opacity: 0.22;
+}
+.ashelf-detail { min-width: 0; }
+.ashelf-kicker {
+  font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--accent);
+  animation: ashelf-rise .6s var(--ease) both;
+}
+.ashelf-title {
+  font-size: clamp(1.8rem, 3.4vw, 2.7rem); line-height: 1.06; letter-spacing: -0.02em;
+  margin: 8px 0 20px;
+  animation: ashelf-rise .6s var(--ease) .06s both;
+}
+.ashelf-quotes { display: flex; flex-direction: column; gap: 12px; list-style: none; margin: 0; padding: 0; }
+.ashelf-quote {
   display: flex; gap: 10px; align-items: baseline;
-  padding-left: 14px; border-left: 2px solid color-mix(in srgb, var(--accent) 35%, transparent);
-  color: var(--ink); font-size: 0.96rem; line-height: 1.5;
+  padding-left: 14px; border-left: 2px solid color-mix(in srgb, var(--accent) 38%, transparent);
+  color: var(--ink-2); font-size: 0.98rem; line-height: 1.5; font-style: italic;
+  opacity: 0; animation: ashelf-rise .55s var(--ease) both;
 }
-.quote-mark { font-family: var(--display); font-size: 1.4rem; color: var(--accent); line-height: 0; transform: translateY(6px); }
-.quote-text { font-style: italic; color: var(--ink-2); }
+.quote-mark { font-family: var(--display); font-size: 1.4rem; color: var(--accent); line-height: 0; transform: translateY(6px); font-style: normal; }
+
+@keyframes ashelf-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes ashelf-poster-in {
+  from { opacity: 0; transform: translateY(18px) scale(.95); }
+  to   { opacity: 1; transform: none; }
+}
 
 /* Berserk cards */
 .section-berserk { position: relative; }
@@ -668,8 +758,22 @@ p { margin: 0; }
 .channel-copy p { color: var(--ink-2); }
 
 @media (max-width: 900px) {
-  .game-grid, .shelf, .berserk-grid { grid-template-columns: 1fr; }
+  .game-grid, .berserk-grid { grid-template-columns: 1fr; }
   .berserk-card:first-child { grid-column: span 1; }
+
+  /* Anime selector: stack tabs above a single-column stage */
+  .ashelf { min-height: 0; }
+  .ashelf-grid { grid-template-columns: 1fr; min-height: 0; }
+  .ashelf-tabs {
+    flex-direction: row; flex-wrap: nowrap; overflow-x: auto;
+    border-right: none; border-bottom: 1px solid var(--line);
+    -ms-overflow-style: none; scrollbar-width: none;
+  }
+  .ashelf-tabs::-webkit-scrollbar { display: none; }
+  .ashelf-tab { flex: 0 0 auto; }
+  .ashelf-tab-title { font-size: 0.9rem; }
+  .ashelf-stage { grid-template-columns: 1fr; gap: 22px; }
+  .ashelf-poster { max-width: 200px; margin: 0 auto; }
 }
 
 /* ------------------------------- Reveal --------------------------------- */
@@ -680,6 +784,9 @@ p { margin: 0; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .status-dot, .tl-current .tl-node { animation: none; }
   .btn:hover, .work-card:hover { transform: none; }
+  .ashelf-quote, .ashelf-kicker, .ashelf-title, .ashelf-poster { animation: none; opacity: 1; }
+  .ashelf-bg-layer, .gbg-layer { transition: opacity .2s linear; transform: none; }
+  .ashelf-bg-layer.on, .gbg-layer.on { transform: none; }
 }
 
 /* ------------------------------ Responsive ------------------------------ */
@@ -981,10 +1088,14 @@ kbd {
 .hero-name { font-family: var(--display); font-weight: 600; font-size: 1.18rem; letter-spacing: -0.01em; color: var(--ink); }
 .hero-id-role { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); }
 
-/* Off-Duty hero — optional background image behind the crystal scene */
+/* Off-Duty hero — ambient tint behind the crystal scene */
 .od-hero::before {
   content: ""; position: absolute; inset: 0; z-index: 0;
-  background: #070a12 url("/img/offduty-bg.jpg") center / cover no-repeat; opacity: 0.42;
+  background:
+    radial-gradient(90% 70% at 18% 0%, color-mix(in srgb, var(--violet) 16%, transparent), transparent 60%),
+    radial-gradient(80% 80% at 100% 100%, color-mix(in srgb, var(--cyan) 12%, transparent), transparent 55%),
+    #070a12;
+  opacity: 0.7;
 }
 
 /* Projects hero 3D ash-mote layer — sits over the warrior image, under the veil */
@@ -1193,6 +1304,37 @@ kbd {
   display: inline-flex; align-items: center; gap: 8px; padding: 7px 13px; border-radius: 999px;
   font-family: var(--mono); font-size: 0.72rem; color: var(--ink);
   background: rgba(10,14,26,0.72); border: 1px solid var(--line); backdrop-filter: blur(10px);
+}
+
+/* Intentional "awaiting photo" placeholder until a real photo is dropped in.
+   All three vanish automatically the moment /profile.jpg exists. */
+.hero-portrait-frame.no-photo,
+.offclock-media.no-photo { position: relative; isolation: isolate; }
+.hero-portrait-frame.no-photo::before,
+.offclock-media.no-photo::before,
+.about-portrait.no-photo::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 16px 16px;
+  -webkit-mask-image: radial-gradient(72% 72% at 50% 42%, #000, transparent 80%);
+          mask-image: radial-gradient(72% 72% at 50% 42%, #000, transparent 80%);
+}
+.hero-portrait-mark,
+.offclock-badge { z-index: 1; }
+.mono-line { display: inline-flex; gap: 2px; }
+.hero-portrait-frame.no-photo .hero-portrait-mark,
+.offclock-media.no-photo .offclock-badge,
+.about-portrait.no-photo .about-monogram {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  font-size: 2.2rem;
+}
+.about-portrait.no-photo .about-monogram { gap: 9px; }
+.hero-portrait-mark::after,
+.offclock-badge::after,
+.about-portrait.no-photo .about-monogram::after {
+  content: "Awaiting photo";
+  font-family: var(--mono); font-weight: 400; font-size: 0.6rem;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
 }
 
 .hero-stats {

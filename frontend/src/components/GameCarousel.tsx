@@ -4,15 +4,17 @@ import { slugify } from "../util";
 
 /** Slidable, cover-image game carousel. Each game gets its own cinematic slide.
  *  Drop covers at /public/games/<slug>.jpg; an accent gradient stands in until then. */
-export default function GameCarousel({ games }: { games: Game[] }) {
+export default function GameCarousel({ games, onActive }: { games: Game[]; onActive?: (i: number) => void }) {
   const track = useRef<HTMLDivElement>(null);
   const [idx, setIdx] = useState(0);
+
+  const setActive = (n: number) => { setIdx(n); onActive?.(n); };
 
   const go = (i: number) => {
     const n = (i + games.length) % games.length;
     const el = track.current?.children[n] as HTMLElement | undefined;
     el?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-    setIdx(n);
+    setActive(n);
   };
 
   const onScroll = () => {
@@ -26,7 +28,7 @@ export default function GameCarousel({ games }: { games: Game[] }) {
       const d = Math.abs(cc - center);
       if (d < bestD) { bestD = d; best = i; }
     });
-    setIdx(best);
+    if (best !== idx) setActive(best);
   };
 
   const onKey = (e: KeyboardEvent) => {

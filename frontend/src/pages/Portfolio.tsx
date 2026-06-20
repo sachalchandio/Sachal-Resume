@@ -112,7 +112,7 @@ export default function Portfolio() {
                 alt="Sachal Chandio"
                 wrapClass="about-portrait"
                 imgClass="portrait-img"
-                fallback={<div className="about-monogram" aria-hidden="true"><span>[</span>SC<span>]</span></div>}
+                fallback={<div className="about-monogram" aria-hidden="true"><span className="mono-line"><span>[</span>SC<span>]</span></span></div>}
               />
               <dl>
                 {about.facts.map((f) => (
@@ -221,7 +221,7 @@ export default function Portfolio() {
               alt="Sachal Chandio off the clock"
               wrapClass="offclock-media"
               imgClass="offclock-img"
-              fallback={<div className="offclock-badge" aria-hidden="true"><span>[</span>SC<span>]</span></div>}
+              fallback={<div className="offclock-badge" aria-hidden="true"><span className="mono-line"><span>[</span>SC<span>]</span></span></div>}
             />
             <div className="offclock-copy">
               <span className="section-index">05</span>
