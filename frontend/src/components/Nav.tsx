@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 
 export interface NavLink {
   label: ReactNode;
@@ -78,6 +79,7 @@ export default function Nav({ brandTo, brandRoute, links, ctas }: NavProps) {
       </nav>
 
       <div className="nav-cta">
+        <ThemeToggle />
         {ctas.map((c, i) => (
           <LinkItem
             key={i}

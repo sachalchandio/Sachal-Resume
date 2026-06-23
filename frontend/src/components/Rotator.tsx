@@ -21,6 +21,7 @@ export default function Rotator({ words }: { words: string[] }) {
   return (
     <span className="rotator">
       <span
+        key={i}
         className="rotator-word"
         style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(8px)" }}
       >

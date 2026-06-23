@@ -10,7 +10,11 @@ import Rotator from "../components/Rotator";
 import Portrait from "../components/Portrait";
 import CapabilityCard from "../components/CapabilityCard";
 import ContactForm from "../components/ContactForm";
+import ForgeGauge from "../components/ForgeGauge";
+import EmberField from "../components/EmberField";
+import HeatEcho from "../components/HeatEcho";
 import ArchitectureScene from "../three/ArchitectureScene";
+import { HeatProvider } from "../heat";
 
 export default function Portfolio() {
   const [data, setData] = useState<PortfolioData | null>(null);
@@ -39,62 +43,66 @@ export default function Portfolio() {
   ];
 
   return (
-    <>
+    <HeatProvider>
       <a className="skip-link" href="#work">Skip to work</a>
       <Nav brandTo="#top" links={links} ctas={ctas} />
 
       <main>
-        {/* HERO — person-forward editorial */}
+        {/* 00 · THE FIRE — thesis-led forge hero */}
         <section className="hero" id="hero">
-          <div className="hero-amb" aria-hidden="true"><ArchitectureScene /></div>
+          <div className="hero-amb" aria-hidden="true"><EmberField colors={["#E2611C", "#D9A441"]} /></div>
           <div className="hero-amb-veil" aria-hidden="true" />
 
-          <div className="hero-inner">
-            <Reveal className="hero-lead">
-              <p className="hero-eyebrow"><span className="status-dot" aria-hidden="true"></span>{profile.availability}</p>
-              <h1 className="hero-name-xl">Sachal Chandio</h1>
-              <p className="hero-thesis">
-                {profile.headline_lead}{" "}
-                <span className="hl-tail"><Rotator words={profile.headline_rotate} />.</span>
-              </p>
-              <p className="hero-roleline">
-                <span>{profile.role}</span><i aria-hidden="true" />
-                <span>{profile.focus}</span><i aria-hidden="true" />
-                <span>{profile.location}</span>
-              </p>
-              <p className="hero-summary">{profile.summary}</p>
-              <div className="hero-cta">
-                <a className="btn btn-solid btn-lg" href="#work">View the work →</a>
-                <a className="btn btn-ghost btn-lg" href="/Sachal_Chandio_Resume.pdf" download>Résumé ↓</a>
-                <a className="hero-link" href={profile.links.github} target="_blank" rel="noopener">GitHub ↗</a>
-              </div>
-            </Reveal>
+          <Reveal className="hero-inner hero-forge">
+            <ForgeGauge />
+            <h1 className="hero-thesis-xl">
+              {profile.headline_lead}{" "}
+              <span className="hl-rot"><Rotator words={profile.headline_rotate} /></span>.
+            </h1>
+            <p className="hero-roleline">
+              <span>{profile.role}</span><i aria-hidden="true" />
+              <span>{profile.focus}</span><i aria-hidden="true" />
+              <span>{profile.location}</span>
+            </p>
+            <p className="hero-creedline">Quenched and tempered over six years — remote or relocation.</p>
+            <div className="hero-cta">
+              <a className="btn btn-solid btn-lg" href="#blueprint">Enter the forge →</a>
+              <a className="btn btn-ghost btn-lg" href="/Sachal_Chandio_Resume.pdf" download>Résumé ↓</a>
+              <a className="hero-link" href={profile.links.github} target="_blank" rel="noopener">GitHub ↗</a>
+            </div>
+          </Reveal>
 
-            <Reveal className="hero-portrait">
-              <div className="hero-portrait-frame">
-                <img
-                  className="hero-portrait-img"
-                  src="/profile.jpg"
-                  alt={profile.name}
-                  onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.parentElement?.classList.add("no-photo"); }}
-                />
-                <span className="hero-portrait-mark" aria-hidden="true">SC</span>
-                <span className="hero-portrait-chip"><span className="status-dot" aria-hidden="true"></span>Open to work</span>
-              </div>
-            </Reveal>
-          </div>
-
-          <Reveal className="hero-stats">
+          <Reveal className="hero-ingots" aria-label="Forged in production">
             {metrics.map((m) => (
-              <div className="hstat" key={m.label}>
-                <span className="hstat-num">
-                  <span className="hstat-prefix">{m.prefix}</span>
+              <div className="ingot" key={m.label}>
+                <span className="ingot-num">
+                  <span className="ingot-prefix">{m.prefix}</span>
                   <Counter target={m.value} />
-                  <span className="hstat-suffix">{m.suffix}</span>
+                  <span className="ingot-suffix">{m.suffix}</span>
                 </span>
-                <span className="hstat-label">{m.label}</span>
+                <span className="ingot-label">{m.label}</span>
               </div>
             ))}
+          </Reveal>
+        </section>
+
+        {/* 01 · THE CREED */}
+        <section className="section-creed" aria-label="Creed">
+          <Reveal className="creed-inner">
+            <p className="creed-line">“I am a struggler. I have never been anything else.”</p>
+            <span className="creed-attrib">Berserk · the struggler’s creed</span>
+          </Reveal>
+        </section>
+
+        {/* 02 · THE BLUEPRINT — interactive architecture */}
+        <section className="section section-blueprint" id="blueprint">
+          <Reveal className="section-head">
+            <span className="section-index">01</span>
+            <h2>The fortification under load</h2>
+            <p>Five provider silos, hard-isolated, drawn into one sub-second search. Hover the iron to read its dispatch.</p>
+          </Reveal>
+          <Reveal className="bp-frame">
+            <ArchitectureScene />
           </Reveal>
         </section>
 
@@ -102,7 +110,7 @@ export default function Portfolio() {
         <section className="section section-about" id="about">
           <div className="about-grid">
             <Reveal className="about-copy">
-              <span className="section-index">00</span>
+              <span className="section-index">02</span>
               <h2>Backend by trade, system-thinker by habit.</h2>
               {about.paragraphs.map((p, i) => <p key={i}>{p}</p>)}
             </Reveal>
@@ -126,8 +134,8 @@ export default function Portfolio() {
         {/* CAPABILITIES */}
         <section className="section" id="capabilities">
           <Reveal className="section-head">
-            <span className="section-index">01</span>
-            <h2>What I do well</h2>
+            <span className="section-index">03</span>
+            <h2>What I forge well</h2>
             <p>Four things I get asked to own — and the tools I reach for.</p>
           </Reveal>
           <div className="cap-grid">
@@ -135,12 +143,12 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* WORK */}
+        {/* 03 · THE WORK — forged blades */}
         <section className="section" id="work">
           <Reveal className="section-head">
-            <span className="section-index">02</span>
-            <h2>Selected work</h2>
-            <p>Real systems in production — the problem, the approach, the impact.</p>
+            <span className="section-index">04</span>
+            <h2>Pieces that left the forge</h2>
+            <p>The problem, the strike of the hammer, and what held under load.</p>
           </Reveal>
           <div className="work-list">
             {projects.map((p) => (
@@ -153,12 +161,12 @@ export default function Portfolio() {
                   </header>
                   <div className="work-detail">
                     <div className="work-block"><span className="work-k">Problem</span><p>{p.problem}</p></div>
-                    <div className="work-block"><span className="work-k">Approach</span><p>{p.approach}</p></div>
+                    <div className="work-block"><span className="work-k">The strike</span><p>{p.approach}</p></div>
                   </div>
                   <ul className="chip-row">{p.stack.map((s) => <li className="chip" key={s}>{s}</li>)}</ul>
                 </div>
                 <aside className="work-impact">
-                  <span className="work-k">Impact</span>
+                  <span className="work-k">Held</span>
                   <ul>{p.impact.map((i, k) => <li key={k}>{i}</li>)}</ul>
                 </aside>
               </Reveal>
@@ -166,12 +174,12 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* JOURNEY */}
-        <section className="section" id="journey">
+        {/* 04 · THE TEMPER LINE — experience that cools as it descends */}
+        <section className="section section-temper" id="journey">
           <Reveal className="section-head">
-            <span className="section-index">03</span>
-            <h2>Deployment history</h2>
-            <p>Where the work shipped — most recent first.</p>
+            <span className="section-index">05</span>
+            <h2>The temper line</h2>
+            <p>Quenched and tempered over six years. The bar runs hottest where I’m working now.</p>
           </Reveal>
           <ol className="timeline">
             {experience.map((e, i) => (
@@ -191,9 +199,9 @@ export default function Portfolio() {
         {/* STACK */}
         <section className="section" id="stack">
           <Reveal className="section-head">
-            <span className="section-index">04</span>
-            <h2>Toolbox</h2>
-            <p>The stack I build with, grouped by where it lives.</p>
+            <span className="section-index">06</span>
+            <h2>The rack</h2>
+            <p>The tools on the wall, grouped by where they live.</p>
           </Reveal>
           <div className="stack-grid">
             {Object.entries(stack).map(([group, items]) => (
@@ -266,10 +274,10 @@ export default function Portfolio() {
       </main>
 
       <Footer name={profile.name}>
-        Flask · React · Three.js · Docker · Kubernetes —{" "}
+        <HeatEcho /> · forged with Flask · React · Three.js · Docker · Kubernetes —{" "}
         <a href={profile.links.github} target="_blank" rel="noopener">source</a>
       </Footer>
-    </>
+    </HeatProvider>
   );
 }
 

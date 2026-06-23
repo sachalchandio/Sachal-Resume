@@ -9,9 +9,13 @@ from __future__ import annotations
 
 import logging
 import os
+import platform
+import threading
+import time
+from collections import deque
 from datetime import datetime, timezone
 
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, g, jsonify, request, send_from_directory
 from flask_cors import CORS
 
 import content
@@ -24,6 +28,33 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(levelname)-7s  %(
 log = logging.getLogger("portfolio")
 
 STARTED_AT = datetime.now(timezone.utc)
+
+APP_VERSION = os.environ.get("APP_VERSION", "1.0.0")
+GIT_SHA = os.environ.get("GIT_SHA") or os.environ.get("SOURCE_COMMIT") or ""
+REGION = os.environ.get("HF_SPACE_REGION") or os.environ.get("REGION") or "auto"
+
+# Live, in-process operational metrics — make the "this site is a running
+# service" claim literally true. Per-worker counters; a small rolling window
+# of real handler latencies feeds the status sparkline.
+_metrics_lock = threading.Lock()
+_request_count = 0
+_latencies_ms: "deque[float]" = deque(maxlen=120)
+
+
+@app.before_request
+def _start_timer() -> None:
+    g._t0 = time.perf_counter()
+
+
+@app.after_request
+def _record_metrics(resp):
+    global _request_count
+    t0 = getattr(g, "_t0", None)
+    if t0 is not None:
+        with _metrics_lock:
+            _request_count += 1
+            _latencies_ms.append((time.perf_counter() - t0) * 1000.0)
+    return resp
 
 
 def _now_iso() -> str:
@@ -117,6 +148,45 @@ def healthz():
 @app.get("/readyz")
 def readyz():
     return jsonify({"status": "ready", "checked_at": _now_iso()})
+
+
+@app.get("/api/status")
+def api_status():
+    """Live operational snapshot — powers the system-status hero.
+
+    Real values: uptime since process start, a per-process request counter, and
+    measured handler latencies (p50/p95/last) from a rolling window.
+    """
+    now = datetime.now(timezone.utc)
+    with _metrics_lock:
+        count = _request_count
+        raw = list(_latencies_ms)
+    samples = sorted(raw)
+
+    def pct(p: float):
+        if not samples:
+            return None
+        idx = min(len(samples) - 1, int(round((p / 100.0) * (len(samples) - 1))))
+        return round(samples[idx], 2)
+
+    return jsonify({
+        "status": "operational",
+        "service": "portfolio-api",
+        "version": APP_VERSION,
+        "commit": GIT_SHA[:7] if GIT_SHA else None,
+        "region": REGION,
+        "runtime": f"Python {platform.python_version()} · Flask · gunicorn",
+        "started_at": STARTED_AT.isoformat(),
+        "uptime_seconds": round((now - STARTED_AT).total_seconds(), 1),
+        "requests_served": count,
+        "latency_ms": {
+            "last": round(raw[-1], 2) if raw else None,
+            "p50": pct(50),
+            "p95": pct(95),
+        },
+        "samples": [round(x, 2) for x in raw[-40:]],
+        "now": now.isoformat(),
+    })
 
 
 @app.errorhandler(404)

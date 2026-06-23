@@ -58,7 +58,7 @@ export default function ProjectsScene() {
 
     const resize = () => {
       const r = canvas.getBoundingClientRect();
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
       renderer.setSize(Math.max(1, r.width), Math.max(1, r.height), false);
       camera.aspect = Math.max(1, r.width) / Math.max(1, r.height);
       camera.updateProjectionMatrix();
@@ -69,6 +69,8 @@ export default function ProjectsScene() {
 
     const clock = new THREE.Clock();
     let raf = 0;
+    let running = false;
+    let lbx = 0, lby = 0;
     const frame = () => {
       const dt = clock.getDelta();
       items.forEach((it) => {
@@ -84,16 +86,26 @@ export default function ProjectsScene() {
       camera.position.y = -cy * 2.5;
       camera.lookAt(0, 0, 0);
       motes.rotation.y += dt * 0.025;
-      if (bg) bg.style.transform = `scale(1.07) translate3d(${(-cx * 16).toFixed(1)}px, ${(-cy * 12).toFixed(1)}px, 0)`;
+      // Only repaint the large warrior image when the parallax actually moved.
+      if (bg && (Math.abs(cx - lbx) > 0.0006 || Math.abs(cy - lby) > 0.0006)) {
+        bg.style.transform = `scale(1.07) translate3d(${(-cx * 16).toFixed(1)}px, ${(-cy * 12).toFixed(1)}px, 0)`;
+        lbx = cx; lby = cy;
+      }
       renderer.render(scene, camera);
-      if (!reduce) raf = requestAnimationFrame(frame);
+      if (running) raf = requestAnimationFrame(frame);
     };
+    const start = () => { if (!running && !reduce) { running = true; clock.getDelta(); raf = requestAnimationFrame(frame); } };
+    const stop = () => { running = false; cancelAnimationFrame(raf); };
+    // Pause the whole scene when the hero is scrolled out of view.
+    const io = new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0 });
+    io.observe(canvas);
     if (reduce) renderer.render(scene, camera);
-    else raf = requestAnimationFrame(frame);
+    else start();
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       ro.disconnect();
+      io.disconnect();
       window.removeEventListener("pointermove", onMove);
       if (bg) bg.style.transform = "";
       renderer.dispose();

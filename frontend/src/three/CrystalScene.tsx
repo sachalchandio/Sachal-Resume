@@ -85,7 +85,7 @@ export default function CrystalScene() {
     const resize = () => {
       const r = canvas.getBoundingClientRect();
       const w = Math.max(1, r.width), h = Math.max(1, r.height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
@@ -112,14 +112,20 @@ export default function CrystalScene() {
       camera.lookAt(0, 0, 0);
       shards.rotation.y += dt * 0.03;
       renderer.render(scene, camera);
-      if (!reduce) raf = requestAnimationFrame(frame);
+      if (running) raf = requestAnimationFrame(frame);
     };
+    let running = false;
+    const start = () => { if (!running && !reduce) { running = true; clock.getDelta(); raf = requestAnimationFrame(frame); } };
+    const stop = () => { running = false; cancelAnimationFrame(raf); };
+    const vio = new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0 });
+    vio.observe(canvas);
     if (reduce) renderer.render(scene, camera);
-    else raf = requestAnimationFrame(frame);
+    else start();
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       ro.disconnect();
+      vio.disconnect();
       window.removeEventListener("pointermove", onMove);
       renderer.dispose();
     };

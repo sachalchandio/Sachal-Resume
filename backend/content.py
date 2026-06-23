@@ -10,7 +10,7 @@ PROFILE = {
     "name": "Sachal Chandio",
     "role": "Senior Software Engineer",
     "focus": "Backend · Distributed Data · DevOps",
-    "headline_lead": "I architect backends that stay",
+    "headline_lead": "I forge backends that stay",
     "headline_rotate": ["fast", "consistent", "observable", "hard to break"],
     "summary": (
         "Senior engineer with 6+ years building and scaling backend systems and "

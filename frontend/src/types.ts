@@ -117,3 +117,18 @@ export interface ProjectWIP {
 export interface BuildingData {
   building: ProjectWIP[];
 }
+
+export interface StatusData {
+  status: string;
+  service: string;
+  version: string;
+  commit: string | null;
+  region: string;
+  runtime: string;
+  started_at: string;
+  uptime_seconds: number;
+  requests_served: number;
+  latency_ms: { last: number | null; p50: number | null; p95: number | null };
+  samples: number[];
+  now: string;
+}
