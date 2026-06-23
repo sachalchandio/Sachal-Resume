@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import Reveal from "../components/Reveal";
 import EmberField from "../components/EmberField";
 import AdvisorMockup, { MarketDetail, DamageSim } from "../components/AdvisorMockup";
+import HeroVideo from "../components/HeroVideo";
 import ProjectsScene from "../three/ProjectsScene";
 
 export default function Projects() {
@@ -43,6 +44,7 @@ export default function Projects() {
         {/* HERO */}
         <section className="poe-hero">
           <div className="poe-hero-bg" />
+          <HeroVideo />
           <ProjectsScene />
           <div className="poe-hero-veil" />
           <EmberField colors={["#FF6A2B", "#E8B23A"]} />

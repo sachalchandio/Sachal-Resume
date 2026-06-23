@@ -1025,6 +1025,13 @@ kbd {
   background: #0a0506 url("/poe2-hero.webp") center / cover no-repeat;
   transform: scale(1.04);
 }
+.poe-hero-video {
+  position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%;
+  object-fit: cover; pointer-events: none;
+  opacity: 0; animation: poe-vid-in 1.4s ease 0.4s forwards;
+}
+@keyframes poe-vid-in { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .poe-hero-video { animation: none; opacity: 1; } }
 .poe-hero-veil {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
