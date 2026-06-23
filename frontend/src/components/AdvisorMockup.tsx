@@ -60,3 +60,69 @@ export default function AdvisorMockup() {
     </div>
   );
 }
+
+/** Screen 2 — drill into a recommended item and the live market. */
+export function MarketDetail() {
+  const listings = [
+    { price: "1.4 div", note: "online", best: true },
+    { price: "1.5 div", note: "online" },
+    { price: "1.6 div", note: "afk 4m" },
+  ];
+  return (
+    <div className="adv adv-sm" role="img" aria-label="Concept: item detail with live market listings and the resulting DPS change.">
+      <div className="adv-bar" aria-hidden="true">
+        <span className="adv-bar-l"><span className="adv-dot" /> Item · Ring</span>
+        <span className="adv-pill ghost">live market</span>
+      </div>
+      <div className="adv-pad" aria-hidden="true">
+        <div className="mkt-item">
+          <b className="mkt-name">Storm’s Coil</b>
+          <span className="mkt-type">Topaz Ring · rare</span>
+          <ul className="mkt-mods">
+            <li>+18% to Lightning Damage</li>
+            <li>Adds 24–41 Lightning Damage to Spells</li>
+            <li>+12% Cast Speed</li>
+          </ul>
+        </div>
+        <span className="adv-k">Cheapest listings</span>
+        <div className="mkt-list">
+          {listings.map((l, i) => (
+            <div className={`mkt-row ${l.best ? "best" : ""}`} key={i}>
+              <b>{l.price}</b><span>{l.note}</span>{l.best && <span className="mkt-buy">whisper ▸</span>}
+            </div>
+          ))}
+        </div>
+        <div className="mkt-delta">
+          <span className="adv-k">DPS after swap</span>
+          <b>2.74M → <span className="adv-gain">3.01M</span> <span className="mkt-pct">+9.8%</span></b>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Screen 3 — the damage-simulation engine behind every number. */
+export function DamageSim() {
+  const rows = [
+    { k: "Base lightning", v: "412 – 1,240" },
+    { k: "Increased damage", v: "+186%" },
+    { k: "More multipliers", v: "×2.41" },
+    { k: "Crit (71% · 3.1×)", v: "+148%" },
+    { k: "Lightning penetration", v: "+28%" },
+    { k: "Projectiles", v: "9" },
+  ];
+  return (
+    <div className="adv adv-sm" role="img" aria-label="Concept: the damage simulation breakdown that produces the effective DPS figure.">
+      <div className="adv-bar" aria-hidden="true">
+        <span className="adv-bar-l"><span className="adv-dot" /> Damage simulation</span>
+        <span className="adv-pill ghost">Spark</span>
+      </div>
+      <div className="adv-pad" aria-hidden="true">
+        <ul className="sim-rows">
+          {rows.map((r) => <li key={r.k}><span>{r.k}</span><b>{r.v}</b></li>)}
+        </ul>
+        <div className="sim-total"><span className="adv-k">Effective DPS</span><b>2.74M</b></div>
+      </div>
+    </div>
+  );
+}

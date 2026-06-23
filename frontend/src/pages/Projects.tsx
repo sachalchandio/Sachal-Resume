@@ -5,7 +5,7 @@ import Nav, { type NavLink } from "../components/Nav";
 import Footer from "../components/Footer";
 import Reveal from "../components/Reveal";
 import EmberField from "../components/EmberField";
-import AdvisorMockup from "../components/AdvisorMockup";
+import AdvisorMockup, { MarketDetail, DamageSim } from "../components/AdvisorMockup";
 import ProjectsScene from "../three/ProjectsScene";
 
 export default function Projects() {
@@ -67,6 +67,10 @@ export default function Projects() {
             <p className="poe-tech-body">Paste your build; it simulates the damage and prices every viable item against the live market — the most DPS per Divine Orb, first.</p>
           </Reveal>
           <Reveal><AdvisorMockup /></Reveal>
+          <Reveal className="adv-screens">
+            <MarketDetail />
+            <DamageSim />
+          </Reveal>
         </section>
 
         {/* OVERVIEW + PROBLEM */}
