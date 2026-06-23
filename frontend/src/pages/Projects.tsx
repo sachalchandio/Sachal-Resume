@@ -5,6 +5,7 @@ import Nav, { type NavLink } from "../components/Nav";
 import Footer from "../components/Footer";
 import Reveal from "../components/Reveal";
 import EmberField from "../components/EmberField";
+import AdvisorMockup from "../components/AdvisorMockup";
 import ProjectsScene from "../three/ProjectsScene";
 
 export default function Projects() {
@@ -58,20 +59,14 @@ export default function Projects() {
           </div>
         </section>
 
-        {/* GALLERY — the world it lives in */}
-        <section className="section poe-section" id="gallery">
+        {/* THE PRODUCT — advisor UI concept */}
+        <section className="section poe-section" id="product">
           <Reveal className="section-head">
-            <span className="poe-eyebrow poe-eyebrow-gold">◈ Wraeclast</span>
-            <h2 className="poe-tech-title">The world it lives in</h2>
-            <p className="poe-tech-body">Path of Exile 2 — the game the advisor crunches damage math for. Official 1080p captures.</p>
+            <span className="poe-eyebrow poe-eyebrow-gold">◈ The product</span>
+            <h2 className="poe-tech-title">Every upgrade, ranked by value</h2>
+            <p className="poe-tech-body">Paste your build; it simulates the damage and prices every viable item against the live market — the most DPS per Divine Orb, first.</p>
           </Reveal>
-          <Reveal className="poe-gallery">
-            {["04", "06", "10", "05", "02", "12", "08", "09"].map((n) => (
-              <figure className="poe-shot" key={n}>
-                <img src={`/poe2/shot-${n}.webp`} alt="Path of Exile 2 screenshot" loading="lazy" />
-              </figure>
-            ))}
-          </Reveal>
+          <Reveal><AdvisorMockup /></Reveal>
         </section>
 
         {/* OVERVIEW + PROBLEM */}
