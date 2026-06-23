@@ -1022,7 +1022,7 @@ kbd {
 }
 .poe-hero-bg {
   position: absolute; inset: 0; z-index: 0;
-  background: #0a0506 url("/poe2-warrior.jpg") center / cover no-repeat;
+  background: #0a0506 url("/poe2-hero.webp") center / cover no-repeat;
   transform: scale(1.04);
 }
 .poe-hero-veil {
@@ -1106,6 +1106,23 @@ kbd {
 .poe-tech-foot { color: var(--poe-gold); font-family: var(--mono); font-size: 0.84rem; margin-top: 18px; }
 
 /* Features — bento */
+/* PoE2 screenshot gallery — bento */
+.poe-gallery { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 150px; gap: 10px; }
+.poe-shot {
+  position: relative; margin: 0; overflow: hidden; border-radius: 12px;
+  border: 1px solid var(--quench-steel); background: var(--void-2);
+}
+.poe-shot img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s var(--ease); }
+.poe-shot:hover img { transform: scale(1.06); }
+.poe-shot::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 50px -12px rgba(0,0,0,0.7); }
+.poe-gallery > :nth-child(1) { grid-column: span 2; grid-row: span 2; }
+.poe-gallery > :nth-child(6) { grid-column: span 2; }
+@media (max-width: 760px) {
+  .poe-gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 116px; gap: 8px; }
+  .poe-gallery > :nth-child(1) { grid-column: span 2; grid-row: span 2; }
+  .poe-gallery > :nth-child(6) { grid-column: span 2; }
+}
+
 .poe-bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .poe-feat {
   display: flex; flex-direction: column; gap: 12px;

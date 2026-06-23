@@ -58,6 +58,22 @@ export default function Projects() {
           </div>
         </section>
 
+        {/* GALLERY — the world it lives in */}
+        <section className="section poe-section" id="gallery">
+          <Reveal className="section-head">
+            <span className="poe-eyebrow poe-eyebrow-gold">◈ Wraeclast</span>
+            <h2 className="poe-tech-title">The world it lives in</h2>
+            <p className="poe-tech-body">Path of Exile 2 — the game the advisor crunches damage math for. Official 1080p captures.</p>
+          </Reveal>
+          <Reveal className="poe-gallery">
+            {["04", "06", "10", "05", "02", "12", "08", "09"].map((n) => (
+              <figure className="poe-shot" key={n}>
+                <img src={`/poe2/shot-${n}.webp`} alt="Path of Exile 2 screenshot" loading="lazy" />
+              </figure>
+            ))}
+          </Reveal>
+        </section>
+
         {/* OVERVIEW + PROBLEM */}
         <section className="section poe-section" id="overview">
           <Reveal className="section-head">
