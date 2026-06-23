@@ -391,6 +391,8 @@ p { margin: 0; }
 .fact:last-child { border-bottom: none; }
 .fact dt { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
 .fact dd { margin: 0; color: var(--ink); font-size: 0.96rem; }
+.spec-card-k { display: block; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; color: var(--ember); padding: 16px 22px 12px; border-bottom: 1px solid var(--line-soft); }
+.spec-card-foot { display: flex; align-items: center; gap: 9px; margin: 0; font-family: var(--mono); font-size: 0.73rem; line-height: 1.45; color: var(--forge-gold); padding: 14px 22px 18px; border-top: 1px solid var(--line-soft); }
 
 /* ----------------------------- Capabilities ----------------------------- */
 .cap-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
@@ -540,6 +542,9 @@ p { margin: 0; }
   background: radial-gradient(120% 100% at 50% 0%, var(--cyan-dim), transparent 70%), var(--void-2);
 }
 .offclock-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.offclock-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px; background: var(--quench-steel); }
+.offclock-grid img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(1.02); }
+.offclock-grid img:hover { filter: saturate(1.15) brightness(1.06); }
 .offclock-badge {
   display: none; position: absolute; inset: 0;
   align-items: center; justify-content: center;

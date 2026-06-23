@@ -7,7 +7,6 @@ import Footer from "../components/Footer";
 import Reveal from "../components/Reveal";
 import Counter from "../components/Counter";
 import Rotator from "../components/Rotator";
-import Portrait from "../components/Portrait";
 import CapabilityCard from "../components/CapabilityCard";
 import ContactForm from "../components/ContactForm";
 import ForgeGauge from "../components/ForgeGauge";
@@ -116,18 +115,15 @@ export default function Portfolio() {
               {about.paragraphs.map((p, i) => <p key={i}>{p}</p>)}
             </Reveal>
             <Reveal as="aside" className="about-facts">
-              <Portrait
-                src="/profile.jpg"
-                alt="Sachal Chandio"
-                wrapClass="about-portrait"
-                imgClass="portrait-img"
-                fallback={<div className="about-monogram" aria-hidden="true"><span className="mono-line"><span>[</span>SC<span>]</span></span></div>}
-              />
-              <dl>
-                {about.facts.map((f) => (
-                  <div className="fact" key={f.k}><dt>{f.k}</dt><dd>{f.v}</dd></div>
-                ))}
-              </dl>
+              <div className="spec-card">
+                <span className="spec-card-k">profile.spec</span>
+                <dl>
+                  {about.facts.map((f) => (
+                    <div className="fact" key={f.k}><dt>{f.k}</dt><dd>{f.v}</dd></div>
+                  ))}
+                </dl>
+                <p className="spec-card-foot"><span className="status-dot" aria-hidden="true" />{profile.availability}</p>
+              </div>
             </Reveal>
           </div>
         </section>
@@ -225,13 +221,12 @@ export default function Portfolio() {
         {/* OFF THE CLOCK */}
         <section className="section" id="offclock">
           <Reveal className="offclock-card">
-            <Portrait
-              src="/profile.jpg"
-              alt="Sachal Chandio off the clock"
-              wrapClass="offclock-media"
-              imgClass="offclock-img"
-              fallback={<div className="offclock-badge" aria-hidden="true"><span className="mono-line"><span>[</span>SC<span>]</span></span></div>}
-            />
+            <div className="offclock-media offclock-grid" aria-hidden="true">
+              <img src="/games/path-of-exile-2.jpg" alt="" loading="lazy" />
+              <img src="/games/counter-strike-2.jpg" alt="" loading="lazy" />
+              <img src="/anime/vinland-saga.jpg" alt="" loading="lazy" />
+              <img src="/games/red-dead-redemption-2.jpg" alt="" loading="lazy" />
+            </div>
             <div className="offclock-copy">
               <span className="section-index">05</span>
               <h2>There’s a human behind the commits.</h2>
