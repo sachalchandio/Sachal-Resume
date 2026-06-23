@@ -1476,9 +1476,15 @@ kbd {
   .ingot:nth-child(1), .ingot:nth-child(2) { border-bottom: 1px solid var(--quench-steel); }
 }
 @media (max-width: 560px) {
-  .hero { min-height: auto; padding-top: 104px; }
-  .forge-gauge { font-size: 0.68rem; gap: 10px; padding: 8px 12px; }
+  .hero { min-height: auto; padding-top: 100px; }
+  .forge-gauge { font-size: 0.66rem; gap: 8px 11px; padding: 8px 12px; }
+  .fg-temp { font-size: 0.84rem; }
   .brand-word { display: none; }
+  /* tighter vertical rhythm so phones scroll less */
+  .section { padding-top: 46px; padding-bottom: 46px; }
+  .section-creed { padding-top: 56px; padding-bottom: 56px; }
+  .poe-gallery { grid-auto-rows: 104px; }
+  .hero-summary { font-size: 1rem; }
 }
 
 /* ───────────────── 01 · THE CREED — a struck Berserk plate ───────────────── */
