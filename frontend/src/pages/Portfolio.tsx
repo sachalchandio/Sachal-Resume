@@ -64,7 +64,7 @@ export default function Portfolio() {
               <span>{profile.focus}</span><i aria-hidden="true" />
               <span>{profile.location}</span>
             </p>
-            <p className="hero-creedline">Quenched and tempered over six years — remote or relocation.</p>
+            <p className="hero-summary">{profile.summary}</p>
             <div className="hero-cta">
               <a className="btn btn-solid btn-lg" href="#blueprint">Enter the forge →</a>
               <a className="btn btn-ghost btn-lg" href="/Sachal_Chandio_Resume.pdf" download>Résumé ↓</a>
@@ -81,6 +81,7 @@ export default function Portfolio() {
                   <span className="ingot-suffix">{m.suffix}</span>
                 </span>
                 <span className="ingot-label">{m.label}</span>
+                <span className="ingot-note">{m.note}</span>
               </div>
             ))}
           </Reveal>
