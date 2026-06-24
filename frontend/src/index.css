@@ -4,46 +4,52 @@
    ========================================================================= */
 
 :root {
-  /* ── Forge & quench palette — hot ember + cooled steel-blue, two anchored
-     colors (not a single accent on black). Steel-blue is drawn from the blazer
-     in the portrait; the slate base is the smithy at dusk, not pure black. */
-  --forge-black:  #0F151B;   /* cool deep slate — not near-black */
-  --anvil-iron:   #18212B;   /* raised surfaces: nav, cards, panels */
-  --quench-steel: #2C3A47;   /* solid borders / engraved rules */
-  --ember:        #DC5F22;   /* warm anchor — molten iron (used with restraint) */
-  --forge-gold:   #D2A14C;   /* brass — maker's-mark, metric figures */
-  --steel:        #5E8CAC;   /* COOL anchor — quenched steel-blue (the blazer) */
-  --blood-oxide:  #863322;   /* deep warm tertiary */
-  --mill-scale:   #ECE8DE;   /* warm bone ink */
-  --slag:         #8794A1;   /* cooled ash — muted ink (cool-leaning) */
-  --cinder-line:  rgba(94, 140, 172, 0.16);   /* steel-tinted hairline */
+  /* ── "Console" — plasma signature on deep space. Electric indigo → azure →
+     cyan: a multi-hue gradient (not one accent on black) with a coral spark. ── */
+  --iris:   #6E5CF6;   /* plasma A — electric indigo */
+  --azure:  #2E80FF;   /* plasma B — electric blue */
+  --aqua:   #2BD4E4;   /* plasma C — cyan */
+  --flare:  #FF5C7A;   /* hot spark — energy, used sparingly */
+  --plasma: linear-gradient(108deg, #8B7BFF 0%, #2E80FF 52%, #2BD4E4 100%);
 
-  /* Surfaces — re-pointed so shared Nav/Footer/chips re-theme globally */
-  --void:      var(--forge-black);
-  --void-2:    #0A0E13;
-  --surface:   var(--anvil-iron);
-  --surface-2: #202B36;
-  --line:      rgba(150, 165, 182, 0.15);
+  /* legacy aliases re-pointed to plasma so the whole app re-themes at once */
+  --forge-black:  #07080F;
+  --anvil-iron:   #0E1120;
+  --quench-steel: rgba(150,162,214,0.20);
+  --ember:        var(--flare);
+  --forge-gold:   var(--aqua);
+  --steel:        var(--azure);
+  --blood-oxide:  var(--iris);
+  --mill-scale:   #EEF0F8;
+  --slag:         #888FB0;
+  --cinder-line:  rgba(110,92,246,0.18);
+
+  /* Surfaces — deep space */
+  --void:      #07080F;
+  --void-2:    #04050C;
+  --surface:   #0E1120;
+  --surface-2: #161A2C;
+  --line:      rgba(150,162,214,0.12);
   --line-soft: var(--cinder-line);
 
   /* Ink */
-  --ink:    var(--mill-scale);
-  --ink-2:  #C3C9D2;
-  --muted:  var(--slag);
+  --ink:    #EEF0F8;
+  --ink-2:  #B7BCD4;
+  --muted:  #888FB0;
 
-  /* Accents — warm/cool duotone */
-  --cyan:   var(--steel);      /* legacy alias → steel-blue is the primary accent */
-  --violet: var(--ember);
-  --amber:  var(--forge-gold);
-  --cyan-dim:   var(--cinder-line);
-  --violet-dim: rgba(220, 95, 34, 0.16);
-  --amber-dim:  rgba(210, 161, 76, 0.14);
+  /* Accents — multi-hue plasma */
+  --cyan:   var(--azure);
+  --violet: var(--iris);
+  --amber:  var(--aqua);
+  --cyan-dim:   rgba(46,128,255,0.16);
+  --violet-dim: rgba(110,92,246,0.16);
+  --amber-dim:  rgba(43,212,228,0.14);
 
-  /* Type — carved stone (identity) + editorial display + logbook + machine readout */
-  --display: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --body:    'Newsreader', Georgia, serif;
-  --mono:    'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
-  --carve:   'Cinzel', Georgia, serif;
+  /* Type — geometric display + clean body + machine readout */
+  --display: 'Sora', system-ui, sans-serif;
+  --body:    'Inter', system-ui, sans-serif;
+  --mono:    'JetBrains Mono', ui-monospace, monospace;
+  --carve:   'Sora', system-ui, sans-serif;
 
   /* Geometry — radius scale (nest one step smaller than the container) */
   --r-xs: 6px;
@@ -91,35 +97,36 @@ body {
    dark token context regardless of the page theme, so the signature elements
    never wash out under the light theme. */
 .nav, .hero, .section-creed, .bp-frame, .od-hero {
-  --void: #0F151B; --void-2: #0A0E13; --surface: #18212B; --surface-2: #202B36;
-  --line: rgba(150,165,182,0.15); --line-soft: rgba(94,140,172,0.16);
-  --ink: #ECE8DE; --ink-2: #C3C9D2; --muted: #8794A1;
-  --ember: #DC5F22; --forge-gold: #D2A14C; --blood-oxide: #863322; --steel: #5E8CAC;
-  --quench-steel: #2C3A47; --mill-scale: #ECE8DE; --slag: #8794A1; --cinder-line: rgba(94,140,172,0.16);
-  --cyan: #5E8CAC; --violet: #DC5F22; --amber: #D2A14C;
+  --void: #07080F; --void-2: #04050C; --surface: #0E1120; --surface-2: #161A2C;
+  --line: rgba(150,162,214,0.12); --line-soft: rgba(110,92,246,0.18);
+  --ink: #EEF0F8; --ink-2: #B7BCD4; --muted: #888FB0;
+  --ember: #FF5C7A; --forge-gold: #2BD4E4; --blood-oxide: #6E5CF6; --steel: #2E80FF;
+  --quench-steel: rgba(150,162,214,0.20); --mill-scale: #EEF0F8; --slag: #888FB0; --cinder-line: rgba(110,92,246,0.18);
+  --cyan: #2E80FF; --violet: #6E5CF6; --amber: #2BD4E4;
   color: var(--ink);
 }
-.hero { background: #0F151B; }
-.bp-frame { background: linear-gradient(180deg, #1a232c, #0d1217); }
+.bp-frame { background: linear-gradient(180deg, #0E1120, #06070E); }
 
 /* ───────────────── Light theme — "cooled forge / blueprint vellum" ───────────────── */
 :root[data-theme="light"] {
-  --forge-black: #ECEAE4; --anvil-iron: #F6F4EE; --quench-steel: #CCCAC2;
-  --ember: #C0521C; --forge-gold: #9A7A30; --blood-oxide: #8E3320; --steel: #3D6E91;
-  --mill-scale: #1E262E; --slag: #5D6873; --cinder-line: rgba(61,110,145,0.16);
-  --void: var(--forge-black); --void-2: #E3E0D8; --surface: var(--anvil-iron); --surface-2: #FBFAF5;
-  --line: rgba(60,74,90,0.16); --line-soft: var(--cinder-line);
-  --ink: var(--mill-scale); --ink-2: #44505C; --muted: var(--slag);
-  --cyan: var(--steel); --violet: var(--ember); --amber: var(--forge-gold);
-  --cyan-dim: var(--cinder-line); --violet-dim: rgba(192,82,28,0.13); --amber-dim: rgba(154,122,48,0.14);
-  --lift-1: 0 1px 0 rgba(255,255,255,0.6) inset, 0 8px 22px -14px rgba(40,55,75,0.32);
-  --lift-2: 0 1px 0 rgba(255,255,255,0.65) inset, 0 20px 44px -22px rgba(40,55,75,0.34);
-  --lift-3: 0 1px 0 rgba(255,255,255,0.65) inset, 0 30px 66px -30px rgba(40,55,75,0.36), 0 0 50px -24px rgba(61,110,145,0.16);
+  --iris: #5B45E0; --azure: #1E62E0; --aqua: #0E9FB3; --flare: #E0436A;
+  --plasma: linear-gradient(108deg, #6A52F0 0%, #1E62E0 52%, #0E9FB3 100%);
+  --forge-black: #F4F5FA; --anvil-iron: #FFFFFF; --quench-steel: rgba(40,50,90,0.16);
+  --ember: #E0436A; --forge-gold: #0E9FB3; --blood-oxide: #5B45E0; --steel: #1E62E0;
+  --mill-scale: #141826; --slag: #5A6080; --cinder-line: rgba(91,69,224,0.14);
+  --void: #F4F5FA; --void-2: #E8EAF4; --surface: #FFFFFF; --surface-2: #FBFBFE;
+  --line: rgba(40,50,90,0.12); --line-soft: var(--cinder-line);
+  --ink: #141826; --ink-2: #3E4564; --muted: #5A6080;
+  --cyan: #1E62E0; --violet: #5B45E0; --amber: #0E9FB3;
+  --cyan-dim: rgba(30,98,224,0.12); --violet-dim: rgba(91,69,224,0.12); --amber-dim: rgba(14,159,179,0.12);
+  --lift-1: 0 1px 0 rgba(255,255,255,0.8) inset, 0 8px 22px -14px rgba(30,40,80,0.18);
+  --lift-2: 0 1px 0 rgba(255,255,255,0.8) inset, 0 20px 44px -22px rgba(30,40,80,0.2);
+  --lift-3: 0 1px 0 rgba(255,255,255,0.8) inset, 0 30px 66px -30px rgba(30,40,80,0.22), 0 0 50px -24px rgba(30,98,224,0.16);
 }
 :root[data-theme="light"] body {
   background:
-    radial-gradient(1100px 640px at 50% 110%, rgba(61,110,145,0.06), transparent 60%),
-    radial-gradient(900px 600px at 88% -6%, rgba(192,82,28,0.045), transparent 58%),
+    radial-gradient(1100px 640px at 16% -4%, rgba(91,69,224,0.07), transparent 56%),
+    radial-gradient(900px 600px at 92% 106%, rgba(14,159,179,0.06), transparent 56%),
     var(--void);
 }
 
@@ -224,11 +231,14 @@ p { margin: 0; }
 }
 .btn-lg { padding: 14px 24px; font-size: 0.92rem; }
 .btn-solid {
-  background: linear-gradient(135deg, var(--ember), #bd4f15);
-  color: var(--void-2); border-color: transparent; font-weight: 600;
+  background: var(--plasma); background-size: 160% 160%; background-position: 0% 50%;
+  color: #fff; border-color: transparent; font-weight: 600;
+  box-shadow: 0 8px 28px -10px rgba(46,128,255,0.55);
+  transition: transform .2s var(--ease), background-position .5s var(--ease), box-shadow .25s var(--ease);
 }
-.btn-solid:hover { transform: translateY(-2px); box-shadow: var(--glow-cyan); }
-.btn-ghost { background: rgba(255,255,255,0.02); color: var(--ink); }
+.btn-solid:hover { transform: translateY(-2px); background-position: 100% 50%; box-shadow: 0 12px 34px -8px rgba(110,92,246,0.6); }
+.btn-ghost { background: rgba(255,255,255,0.03); color: var(--ink); border-color: var(--line); backdrop-filter: blur(8px); }
+.btn-ghost:hover { border-color: color-mix(in srgb, var(--azure) 50%, transparent); color: var(--ink); }
 .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
 
 /* -------------------------------- Chips --------------------------------- */
@@ -1401,76 +1411,78 @@ kbd {
 .nav-links a { font-size: 0.84rem; color: var(--ink-2); }
 
 /* Hero — person-forward editorial */
-/* ───────────────── 00 · THE FIRE — forge hero ───────────────── */
+/* ───────────────── HERO — plasma console ───────────────── */
 .hero {
   position: relative; overflow: hidden; max-width: none; margin: 0;
-  min-height: 86vh; display: flex; flex-direction: column; justify-content: center;
-  padding: clamp(104px, 13vh, 150px) var(--gutter) clamp(28px, 5vh, 52px);
+  min-height: 92vh; display: flex; flex-direction: column; justify-content: center;
+  padding: clamp(118px, 15vh, 180px) var(--gutter) clamp(30px, 5vh, 56px);
+  background: radial-gradient(120% 90% at 50% -12%, rgba(110,92,246,0.14), transparent 55%), #07080F;
 }
-.hero-amb { position: absolute; inset: 0; z-index: 0; opacity: 0.95; pointer-events: none; }
+.plasma-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero-amb { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.hero-mesh {
+  position: absolute; inset: -20%; z-index: 0; pointer-events: none; opacity: 0.5;
+  background:
+    radial-gradient(38% 50% at 22% 28%, rgba(110,92,246,0.5), transparent 70%),
+    radial-gradient(42% 46% at 80% 36%, rgba(46,128,255,0.42), transparent 70%),
+    radial-gradient(38% 50% at 60% 80%, rgba(43,212,228,0.34), transparent 70%);
+  filter: blur(22px); animation: mesh-drift 24s ease-in-out infinite alternate;
+}
+@keyframes mesh-drift { 0% { transform: translate3d(-3%,-2%,0) scale(1); } 100% { transform: translate3d(4%,3%,0) scale(1.12); } }
 .hero-amb-veil {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
-    radial-gradient(120% 78% at 50% 118%, rgba(226,97,28,0.18), transparent 56%),
-    radial-gradient(92% 72% at 16% 30%, rgba(11,8,7,0.74), transparent 62%),
-    linear-gradient(180deg, rgba(11,8,7,0.58), transparent 24%, rgba(11,8,7,0.52) 100%);
+    radial-gradient(110% 82% at 50% 122%, rgba(7,8,15,0.86), transparent 56%),
+    linear-gradient(180deg, rgba(7,8,15,0.46), transparent 30%, rgba(7,8,15,0.62) 100%);
 }
-.hero-inner.hero-forge {
+.hero-inner.hero-console {
   position: relative; z-index: 2; width: 100%; max-width: 1080px; margin: 0 auto;
   display: flex; flex-direction: column; align-items: flex-start; gap: 0;
 }
 .hero-thesis-xl {
-  font-family: var(--display); font-weight: 600; color: var(--mill-scale);
-  font-size: clamp(2.6rem, 6.6vw, 5.2rem); line-height: 1.0; letter-spacing: -0.025em;
-  margin: 28px 0 0; max-width: 18ch; font-optical-sizing: auto; text-wrap: balance;
+  font-family: var(--display); font-weight: 800; color: var(--ink);
+  font-size: clamp(2.8rem, 7vw, 5.7rem); line-height: 1.02; letter-spacing: -0.035em;
+  margin: 30px 0 0; max-width: 17ch; text-wrap: balance;
 }
-.hl-rot { color: var(--ember); font-style: italic; font-weight: 500;
-  text-shadow: 0 0 30px rgba(226,97,28,0.5); }
-
-/* ── Meaningful motion — forge micro-interactions (reduced-motion safe) ── */
-.hl-rot .rotator-word { display: inline-block; animation: hl-ignite 1.15s var(--ease) both; }
-@keyframes hl-ignite {
-  0%   { color: #FFE8B0; text-shadow: 0 0 38px rgba(226,97,28,0.9), 0 0 14px rgba(255,232,176,0.7); }
-  38%  { color: var(--forge-gold); text-shadow: 0 0 30px rgba(217,164,65,0.55); }
-  100% { color: var(--ember); text-shadow: 0 0 30px rgba(226,97,28,0.5); }
+.hl-rot {
+  background: var(--plasma); -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent; font-weight: 800;
 }
-/* section titles ink in — drawn left-to-right on reveal */
+.hl-rot .rotator-word { display: inline-block; animation: hl-rise 0.5s var(--ease) both; }
+@keyframes hl-rise { from { opacity: 0; transform: translateY(0.16em); } to { opacity: 1; transform: none; } }
+/* section titles slide-fade in on reveal */
 .reveal.section-head h2 { clip-path: inset(0 102% 0 -2%); }
-.reveal.section-head.in h2 { clip-path: inset(0 -2% 0 -2%); transition: clip-path .75s var(--ease) .12s; }
-/* work cards heat at the struck edge on hover */
+.reveal.section-head.in h2 { clip-path: inset(0 -2% 0 -2%); transition: clip-path .7s var(--ease) .1s; }
 .work-card { transition: transform .25s var(--ease), box-shadow .25s var(--ease), border-left-color .25s var(--ease); }
-.work-card:hover { border-left-color: var(--ember); box-shadow: var(--lift-2), -3px 0 26px -12px var(--ember); }
-/* chips spark on hover */
+.work-card:hover { border-left-color: var(--azure); box-shadow: var(--lift-2), -3px 0 30px -12px var(--azure); }
 .chip { transition: color .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease); }
-.chip:hover { color: var(--mill-scale); border-color: color-mix(in srgb, var(--ember) 50%, transparent); background: color-mix(in srgb, var(--ember) 9%, transparent); }
-/* ingot edge brightens on hover */
-.ingot { transition: background .3s var(--ease); }
-.ingot:hover { background: linear-gradient(180deg, rgba(40,30,24,0.6), transparent); }
-.ingot:hover::after { opacity: 0.9; }
+.chip:hover { color: var(--ink); border-color: color-mix(in srgb, var(--azure) 55%, transparent); background: color-mix(in srgb, var(--azure) 10%, transparent); }
+.ingot { transition: transform .25s var(--ease), border-color .25s var(--ease); }
 @media (prefers-reduced-motion: reduce) {
-  .hl-rot .rotator-word { animation: none; color: var(--ember); }
   .reveal.section-head h2 { clip-path: none; }
+  .hero-mesh { animation: none; }
 }
 .hero-roleline {
-  font-family: var(--mono); font-size: 0.78rem; color: var(--slag);
-  display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 26px 0 8px;
-  letter-spacing: 0.05em; text-transform: uppercase;
+  font-family: var(--mono); font-size: 0.74rem; color: var(--muted);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 24px 0 6px;
+  letter-spacing: 0.09em; text-transform: uppercase;
 }
-.hero-roleline i { width: 4px; height: 4px; border-radius: 50%; background: var(--ember); opacity: 0.85; }
-.hero-creedline { font-family: var(--body); font-style: italic; color: var(--ink-2); font-size: 1.05rem; margin: 0 0 30px; }
-.hero-summary { font-family: var(--body); color: var(--ink-2); font-size: 1.06rem; line-height: 1.62; max-width: 58ch; margin: 18px 0 30px; }
+.hero-roleline i { width: 5px; height: 5px; border-radius: 50%; background: var(--azure); }
+.hero-summary { font-family: var(--body); color: var(--ink-2); font-size: 1.08rem; line-height: 1.6; max-width: 56ch; margin: 18px 0 32px; }
 .hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
 .hero-link { font-family: var(--mono); font-size: 0.82rem; color: var(--ink-2); border-bottom: 1px solid var(--line); padding-bottom: 1px; letter-spacing: 0.03em; }
+.hero-link:hover { color: var(--aqua); border-color: var(--aqua); }
 .hero-link:hover { color: var(--forge-gold); border-color: var(--forge-gold); }
 
 /* The hero pyrometer (live status) */
 .forge-gauge {
   display: inline-flex; align-items: center; flex-wrap: wrap; gap: 14px;
   font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.04em;
-  padding: 9px 16px; border-radius: 8px; color: var(--slag);
-  border: 1px solid var(--quench-steel);
-  background: linear-gradient(180deg, rgba(40,30,24,0.7), rgba(11,8,7,0.55));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 12px 30px -18px rgba(0,0,0,0.8);
+  padding: 9px 18px; border-radius: 999px; color: var(--muted);
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 10px 30px -18px rgba(0,0,0,0.6);
 }
 .forge-gauge .fg-status { display: inline-flex; align-items: center; gap: 8px; color: var(--steel); font-weight: 500; }
 .forge-gauge.is-banked .fg-status { color: var(--blood-oxide); }
@@ -1517,28 +1529,26 @@ kbd {
   letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
 }
 
-/* Hammered-in ingot stat bar — real metrics struck into the anvil */
+/* Metric cards — glass bento */
 .hero-ingots {
   position: relative; z-index: 2; width: 100%; max-width: 1080px;
   margin: clamp(34px, 6vh, 60px) auto 0;
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  border: 1px solid var(--quench-steel); border-radius: 10px; overflow: hidden;
-  background: linear-gradient(180deg, var(--anvil-iron), var(--void-2));
-  box-shadow: var(--lift-2);
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
 }
 .ingot {
-  position: relative; display: flex; flex-direction: column; gap: 7px;
-  padding: 22px clamp(16px, 2.4vw, 30px); border-right: 1px solid var(--quench-steel);
+  position: relative; display: flex; flex-direction: column; gap: 7px; overflow: hidden;
+  padding: 22px clamp(16px, 2vw, 26px); border-radius: 14px;
+  border: 1px solid var(--line); background: rgba(255,255,255,0.03); backdrop-filter: blur(10px);
 }
 .ingot::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--ember), transparent); opacity: 0.45;
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  background: var(--plasma); opacity: 0.75;
 }
-.ingot:last-child { border-right: none; }
-.ingot-num { font-family: var(--display); font-weight: 600; font-size: clamp(1.8rem, 3.4vw, 2.6rem); color: var(--mill-scale); letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
-.ingot-prefix, .ingot-suffix { color: var(--forge-gold); }
-.ingot-label { font-family: var(--mono); font-size: 0.67rem; color: var(--forge-gold); letter-spacing: 0.04em; text-transform: uppercase; }
-.ingot-note { font-family: var(--body); font-size: 0.83rem; color: var(--slag); line-height: 1.42; margin-top: 3px; }
+.ingot:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--azure) 42%, transparent); }
+.ingot-num { font-family: var(--display); font-weight: 700; font-size: clamp(1.9rem, 3.4vw, 2.7rem); color: var(--ink); letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+.ingot-prefix, .ingot-suffix { color: var(--aqua); }
+.ingot-label { font-family: var(--mono); font-size: 0.66rem; color: var(--azure); letter-spacing: 0.05em; text-transform: uppercase; }
+.ingot-note { font-family: var(--body); font-size: 0.83rem; color: var(--muted); line-height: 1.42; margin-top: 3px; }
 
 /* Hero responsive */
 @media (max-width: 720px) {

@@ -10,7 +10,7 @@ import Rotator from "../components/Rotator";
 import CapabilityCard from "../components/CapabilityCard";
 import ContactForm from "../components/ContactForm";
 import ForgeGauge from "../components/ForgeGauge";
-import EmberField from "../components/EmberField";
+import PlasmaScene from "../three/PlasmaScene";
 import HeatEcho from "../components/HeatEcho";
 import ArchitectureScene from "../three/ArchitectureScene";
 import { HeatProvider } from "../heat";
@@ -47,12 +47,13 @@ export default function Portfolio() {
       <Nav brandTo="#top" links={links} ctas={ctas} />
 
       <main>
-        {/* 00 · THE FIRE — thesis-led forge hero */}
+        {/* HERO — plasma console */}
         <section className="hero" id="hero">
-          <div className="hero-amb" aria-hidden="true"><EmberField colors={["#E2611C", "#D9A441"]} /></div>
+          <div className="hero-amb" aria-hidden="true"><PlasmaScene /></div>
+          <div className="hero-mesh" aria-hidden="true" />
           <div className="hero-amb-veil" aria-hidden="true" />
 
-          <Reveal className="hero-inner hero-forge">
+          <Reveal className="hero-inner hero-console">
             <ForgeGauge />
             <h1 className="hero-thesis-xl">
               {profile.headline_lead}{" "}
@@ -65,13 +66,13 @@ export default function Portfolio() {
             </p>
             <p className="hero-summary">{profile.summary}</p>
             <div className="hero-cta">
-              <a className="btn btn-solid btn-lg" href="#blueprint">Enter the forge →</a>
+              <a className="btn btn-solid btn-lg" href="#blueprint">See the systems →</a>
               <a className="btn btn-ghost btn-lg" href="/Sachal_Chandio_Resume.pdf" download>Résumé ↓</a>
               <a className="hero-link" href={profile.links.github} target="_blank" rel="noopener">GitHub ↗</a>
             </div>
           </Reveal>
 
-          <Reveal className="hero-ingots" aria-label="Forged in production">
+          <Reveal className="hero-ingots" aria-label="In production">
             {metrics.map((m) => (
               <div className="ingot" key={m.label}>
                 <span className="ingot-num">

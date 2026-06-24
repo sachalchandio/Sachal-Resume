@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import { useHeat } from "../heat";
 
 const fmtMs = (v: number | null) => {
@@ -53,28 +52,6 @@ function Sparkline({ data }: { data: number[] }) {
  *  (no per-frame React re-render). */
 export default function ForgeGauge() {
   const heat = useHeat();
-  const tempRef = useRef<HTMLSpanElement>(null);
-  const easedRef = useRef(heat.tempC);
-  const targetRef = useRef(heat.tempC);
-  targetRef.current = heat.tempC;
-
-  useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      if (tempRef.current) tempRef.current.textContent = String(targetRef.current);
-      return;
-    }
-    let raf = 0;
-    const tick = () => {
-      const jitter = Math.sin(performance.now() / 680) * 3;
-      easedRef.current += (targetRef.current + jitter - easedRef.current) * 0.07;
-      if (tempRef.current) tempRef.current.textContent = String(Math.round(easedRef.current));
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
   const running = heat.status === "operational";
 
   return (
@@ -88,10 +65,7 @@ export default function ForgeGauge() {
     >
       <span className="fg-status">
         <span className="fg-dot" aria-hidden="true" />
-        {running ? "FORGE RUNNING" : "BANKED · reconnecting"}
-      </span>
-      <span className="fg-temp" aria-hidden="true">
-        <span ref={tempRef}>{heat.tempC}</span>°C
+        {running ? "LIVE API" : "RECONNECTING"}
       </span>
       <span className="fg-cell" aria-hidden="true">
         <span className="fg-k">p95</span>
