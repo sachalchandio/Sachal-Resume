@@ -391,11 +391,15 @@ p { margin: 0; }
   border-bottom: 1px solid var(--line-soft); letter-spacing: 0.08em;
 }
 .about-monogram span { color: var(--cyan); }
-.about-portrait { position: relative; }
-.portrait-img {
-  width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block;
-  border-bottom: 1px solid var(--line-soft);
+.about-portrait { position: relative; margin: 0; }
+.about-portrait img {
+  width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 16%; display: block;
 }
+.about-portrait::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: var(--plasma); opacity: 0.85;
+}
+.portrait-img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
 .about-portrait .about-monogram { display: none; }
 .about-portrait.no-photo .about-monogram { display: block; }
 .about-facts dl { margin: 0; padding: 8px 22px 18px; }

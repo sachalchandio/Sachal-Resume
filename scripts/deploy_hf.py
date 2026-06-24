@@ -35,6 +35,8 @@ IGNORE = [
     "**/.pytest_cache/**",
     "HuggingFace-Deploy-Guide.pdf",
     "Vercel-Deploy-Guide.pdf",
+    "me.jpg",
+    "scripts/_about_*.png",
     "README.md",
     "readme.md",
 ]

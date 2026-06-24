@@ -116,6 +116,9 @@ export default function Portfolio() {
               {about.paragraphs.map((p, i) => <p key={i}>{p}</p>)}
             </Reveal>
             <Reveal as="aside" className="about-facts">
+              <figure className="about-portrait">
+                <img src="/profile.webp" alt="Sachal Chandio" loading="lazy" width="860" height="1290" />
+              </figure>
               <div className="spec-card">
                 <span className="spec-card-k">profile.spec</span>
                 <dl>
