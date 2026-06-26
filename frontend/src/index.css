@@ -1648,3 +1648,103 @@ kbd {
   .bp-nodes { position: static; max-width: none; margin-top: 12px; }
   .bp-leg-impact { margin-left: 0; width: 100%; }
 }
+
+/* ===================================================================
+   SYSTEM GLYPHS — icons that label data, on a disciplined 3-hue cycle
+   (azure → iris → aqua, with the hot-pink flare as the rare spark).
+   Each tile/row carries its own --accent so the page stops reading as
+   one flat colour. Glyph chips share one recipe: tinted fill, hair-
+   line border in the accent, the mark in the accent.
+   =================================================================== */
+
+/* Inline glyphs inside buttons + the hero link */
+.btn svg { width: 16px; height: 16px; flex: none; }
+.nav-cta .btn svg { width: 15px; height: 15px; }
+.hero-link { display: inline-flex; align-items: center; gap: 7px; }
+.hero-link svg { width: 15px; height: 15px; flex: none; }
+
+/* Shared glyph-chip recipe */
+.ingot-ic, .stack-ic, .ch-ic {
+  display: grid; place-items: center; flex: none; color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--line));
+  background:
+    linear-gradient(155deg,
+      color-mix(in srgb, var(--accent) 22%, transparent),
+      color-mix(in srgb, var(--accent) 5%, transparent));
+}
+
+/* --- Hero stat tiles --- */
+.ingot:nth-child(1) { --accent: var(--azure); }
+.ingot:nth-child(2) { --accent: var(--iris); }
+.ingot:nth-child(3) { --accent: var(--aqua); }
+.ingot:nth-child(4) { --accent: var(--flare); }
+.ingot-ic { width: 40px; height: 40px; border-radius: 11px; margin-bottom: 6px; }
+.ingot-ic svg { width: 21px; height: 21px; }
+.ingot::after { background: var(--accent); opacity: 0.85; }
+.ingot-prefix, .ingot-suffix, .ingot-label { color: var(--accent); }
+.ingot { transition: transform .25s var(--ease), border-color .25s var(--ease), box-shadow .25s var(--ease); }
+.ingot:hover { border-color: color-mix(in srgb, var(--accent) 45%, transparent); box-shadow: var(--lift-1); }
+.ingot:hover .ingot-ic { box-shadow: 0 8px 20px -10px color-mix(in srgb, var(--accent) 65%, transparent); }
+
+/* --- Capability cards: give each its own hue, retire the stray ember --- */
+.cap-card:nth-child(1) { --accent: var(--azure); }
+.cap-card:nth-child(2) { --accent: var(--iris); }
+.cap-card:nth-child(3) { --accent: var(--aqua); }
+.cap-card:nth-child(4) { --accent: var(--flare); }
+.cap-icon {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 34%, var(--line));
+  background:
+    linear-gradient(155deg,
+      color-mix(in srgb, var(--accent) 24%, transparent),
+      color-mix(in srgb, var(--accent) 6%, transparent));
+  transition: box-shadow .25s var(--ease), transform .25s var(--ease);
+}
+.cap-card:hover .cap-icon { transform: translateZ(40px) scale(1.06); box-shadow: 0 12px 28px -12px color-mix(in srgb, var(--accent) 62%, transparent); }
+.cap-card:hover .cap-card-inner { border-color: color-mix(in srgb, var(--accent) 42%, transparent); }
+.cap-no { color: var(--accent); opacity: 0.85; }
+.cap-proof, .cap-proof-mark { color: var(--accent); }
+
+/* --- Stack: a labelled rack, one glyph per category --- */
+.stack-group { transition: border-color .2s var(--ease), transform .2s var(--ease); }
+.stack-group:nth-child(1) { --accent: var(--azure); }
+.stack-group:nth-child(2) { --accent: var(--iris); }
+.stack-group:nth-child(3) { --accent: var(--aqua); }
+.stack-group:nth-child(4) { --accent: var(--flare); }
+.stack-group:nth-child(5) { --accent: var(--azure); }
+.stack-group:nth-child(6) { --accent: var(--iris); }
+.stack-group:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+.stack-group-title { display: flex; align-items: center; gap: 10px; }
+.stack-ic { width: 28px; height: 28px; border-radius: 8px; }
+.stack-ic svg { width: 15px; height: 15px; }
+
+/* --- Contact: plain links become signposted channels --- */
+.contact-channels { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+.contact-channels li:nth-child(1) { --accent: var(--aqua); }
+.contact-channels li:nth-child(2) { --accent: var(--iris); }
+.contact-channels li:nth-child(3) { --accent: var(--azure); }
+.contact-channels li:nth-child(4) { --accent: var(--flare); }
+.contact-channels li:nth-child(5) { --accent: var(--aqua); }
+.contact-channels a {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 14px; border-radius: 12px;
+  border: 1px solid var(--line); background: rgba(255,255,255,0.02);
+  transition: border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
+}
+.contact-channels a:hover {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  transform: translateX(3px);
+}
+.ch-ic { width: 40px; height: 40px; border-radius: 11px; }
+.ch-ic svg { width: 20px; height: 20px; }
+.ch-tx { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+.ch-tx b { font-family: var(--display); font-weight: 600; font-size: 0.96rem; color: var(--ink); letter-spacing: -0.01em; }
+.ch-tx i { font-style: normal; font-family: var(--mono); font-size: 0.75rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ch-go { margin-left: auto; color: var(--muted); font-family: var(--mono); transition: color .2s var(--ease), transform .2s var(--ease); }
+.contact-channels a:hover .ch-go { color: var(--accent); transform: translateX(2px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ingot:hover, .stack-group:hover, .contact-channels a:hover { transform: none; }
+  .cap-card:hover .cap-icon { transform: translateZ(40px); }
+}
