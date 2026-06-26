@@ -1,4 +1,11 @@
-import type { PortfolioData, OffDutyData, BuildingData, StatusData } from "./types";
+import type {
+  PortfolioData,
+  OffDutyData,
+  BuildingData,
+  StatusData,
+  BlogIndexData,
+  BlogPostFull,
+} from "./types";
 
 async function getJSON<T>(url: string): Promise<T> {
   const res = await fetch(url, { headers: { Accept: "application/json" } });
@@ -10,6 +17,9 @@ export const getPortfolio = () => getJSON<PortfolioData>("/api/portfolio");
 export const getOffDuty = () => getJSON<OffDutyData>("/api/off-duty");
 export const getProjects = () => getJSON<BuildingData>("/api/projects");
 export const getStatus = () => getJSON<StatusData>("/api/status");
+export const getBlogIndex = () => getJSON<BlogIndexData>("/api/blog");
+export const getBlogPost = (slug: string) =>
+  getJSON<BlogPostFull>(`/api/blog/${encodeURIComponent(slug)}`);
 
 export interface ContactResult {
   ok: boolean;

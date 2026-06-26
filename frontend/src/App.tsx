@@ -3,6 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import Portfolio from "./pages/Portfolio";
 import OffDuty from "./pages/OffDuty";
 import Projects from "./pages/Projects";
+import BlogList from "./pages/BlogList";
+import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
 import CommandPalette from "./components/CommandPalette";
 import { useKonami } from "./hooks/useKonami";
@@ -23,6 +25,9 @@ export default function App() {
         <Route path="/" element={<Portfolio />} />
         <Route path="/off-duty" element={<OffDuty />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/log" element={<BlogList />} />
+        <Route path="/log/tag/:tag" element={<BlogList />} />
+        <Route path="/log/:slug" element={<BlogPost />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
 

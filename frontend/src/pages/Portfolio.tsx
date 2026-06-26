@@ -33,6 +33,7 @@ export default function Portfolio() {
     { label: "Work", href: "#work" },
     { label: "About", href: "#about" },
     { label: "Building", href: "/projects", route: true },
+    { label: "Build log", href: "/log", route: true },
     { label: "Off-duty", href: "/off-duty", route: true },
     { label: "Contact", href: "#contact" },
   ];

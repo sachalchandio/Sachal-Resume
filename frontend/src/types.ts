@@ -132,3 +132,79 @@ export interface StatusData {
   samples: number[];
   now: string;
 }
+
+// ── Blog ("Field Notes") ─────────────────────────────────────────────────────
+
+export interface BlogStats {
+  commits: number | null;
+  backend: number | null;
+  frontend: number | null;
+}
+
+export interface BlogTocItem {
+  id: string;
+  text: string;
+  level: number;
+}
+
+export interface BlogRef {
+  slug: string;
+  title: string;
+  kind: string;
+  date: string;
+  category: string;
+  period_label: string;
+  reading_time: number;
+}
+
+export interface BlogPostMeta {
+  slug: string;
+  title: string;
+  description: string;
+  excerpt: string;
+  date: string;
+  updated: string;
+  kind: "deepdive" | "monthly" | string;
+  category: string;
+  tags: string[];
+  month: string;
+  period_label: string;
+  repo: string;
+  author: string;
+  reading_time: number;
+  word_count: number;
+  stats: BlogStats | null;
+}
+
+export interface BlogPostFull extends BlogPostMeta {
+  html: string;
+  toc: BlogTocItem[];
+  newer: BlogRef | null;
+  older: BlogRef | null;
+  related: BlogRef[];
+  month_monthly: BlogRef | null;
+  month_deepdives: BlogRef[];
+}
+
+export interface TagCount {
+  tag: string;
+  count: number;
+}
+
+export interface CategoryCount {
+  category: string;
+  count: number;
+}
+
+export interface BlogIndexData {
+  posts: BlogPostMeta[];
+  tags: TagCount[];
+  categories: CategoryCount[];
+  stats: {
+    total: number;
+    deepdives: number;
+    monthly: number;
+    tags: number;
+    commits: number;
+  };
+}

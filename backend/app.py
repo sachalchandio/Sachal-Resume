@@ -19,6 +19,8 @@ from flask import Flask, g, jsonify, request, send_from_directory
 from flask_cors import CORS
 
 import content
+import blog
+from blog import seo as blog_seo
 
 app = Flask(__name__, static_folder="static")
 # Allow the React dev server / deployed frontend to call the API.
@@ -187,6 +189,103 @@ def api_status():
         "samples": [round(x, 2) for x in raw[-40:]],
         "now": now.isoformat(),
     })
+
+
+# ---------------------------------------------------------------------------
+# Blog ("Field Notes") — JSON API + server-rendered HTML for SEO.
+# Server-rendered routes bake the full article + meta + JSON-LD into the page so
+# crawlers and social scrapers never need to run JavaScript; React hydrates #root
+# for real visitors. These explicit rules beat the SPA catch-all by specificity.
+# ---------------------------------------------------------------------------
+
+_BLOG_STATIC_ROUTES = ["/", "/projects", "/off-duty", "/log"]
+
+
+def _base_url() -> str:
+    override = os.environ.get("SITE_URL")
+    if override:
+        return override.rstrip("/")
+    proto = (request.headers.get("X-Forwarded-Proto", "").split(",")[0].strip()
+             or request.scheme)
+    host = (request.headers.get("X-Forwarded-Host", "").split(",")[0].strip()
+            or request.host)
+    return f"{proto}://{host}"
+
+
+@app.get("/api/blog")
+def api_blog():
+    return jsonify({
+        "posts": blog.list_posts(),
+        "tags": blog.all_tags(),
+        "categories": blog.all_categories(),
+        "stats": blog.stats(),
+    })
+
+
+@app.get("/api/blog/<slug>")
+def api_blog_post(slug: str):
+    post = blog.get_post(slug)
+    if not post:
+        return jsonify({"error": "not_found", "message": "No such post."}), 404
+    return jsonify(post)
+
+
+def _render_blog(title: str, head_html: str, body_html: str, status: int = 200):
+    html = blog_seo.inject(blog_seo.read_shell(), title=title, head_html=head_html, body_html=body_html)
+    return app.response_class(html, status=status, mimetype="text/html")
+
+
+@app.get("/log")
+def log_index():
+    base = _base_url()
+    posts = blog.list_posts()
+    title, head = blog_seo.head_for_index(
+        base, heading="Field Notes", desc=blog_seo.BLOG_TAGLINE, path="/log", posts=posts
+    )
+    body = blog_seo.index_html(posts, heading="Field Notes", subtitle=blog_seo.BLOG_TAGLINE)
+    return _render_blog(title, head, body)
+
+
+@app.get("/log/tag/<tag>")
+def log_tag(tag: str):
+    base = _base_url()
+    posts = blog.list_posts(tag=tag)
+    desc = f"Posts tagged “{tag}” — technical field notes from building Telelinkz."
+    title, head = blog_seo.head_for_index(
+        base, heading=f"#{tag}", desc=desc, path=f"/log/tag/{tag}", posts=posts
+    )
+    body = blog_seo.index_html(posts, heading=f"Tagged: {tag}", subtitle=desc)
+    return _render_blog(title, head, body)
+
+
+@app.get("/log/<slug>")
+def log_post(slug: str):
+    post = blog.get_post(slug)
+    if not post:
+        body = ('<main class="ssr"><h1>Post not found</h1>'
+                '<p><a href="/log">All field notes</a></p></main>')
+        return _render_blog("Not found — Sachal Chandio", "", body, status=404)
+    base = _base_url()
+    title, head = blog_seo.head_for_post(post, base)
+    body = blog_seo.article_html(post, base)
+    return _render_blog(title, head, body)
+
+
+@app.get("/sitemap.xml")
+def sitemap_xml():
+    xml = blog_seo.sitemap_xml(blog.list_posts(), _base_url(), _BLOG_STATIC_ROUTES, blog.all_tags())
+    return app.response_class(xml, mimetype="application/xml")
+
+
+@app.get("/rss.xml")
+def rss_xml():
+    xml = blog_seo.rss_xml(blog.list_posts(), _base_url())
+    return app.response_class(xml, mimetype="application/rss+xml")
+
+
+@app.get("/robots.txt")
+def robots_txt():
+    return app.response_class(blog_seo.robots_txt(_base_url()), mimetype="text/plain")
 
 
 @app.errorhandler(404)
