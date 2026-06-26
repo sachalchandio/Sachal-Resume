@@ -10,6 +10,7 @@ import Rotator from "../components/Rotator";
 import CapabilityCard from "../components/CapabilityCard";
 import ContactForm from "../components/ContactForm";
 import ForgeGauge from "../components/ForgeGauge";
+import Icon from "../components/Icon";
 import PlasmaScene from "../three/PlasmaScene";
 import HeatEcho from "../components/HeatEcho";
 import ArchitectureScene from "../three/ArchitectureScene";
@@ -38,9 +39,25 @@ export default function Portfolio() {
     { label: "Contact", href: "#contact" },
   ];
   const ctas: NavLink[] = [
-    { label: "GitHub", href: profile.links.github, external: true },
-    { label: "Résumé ↓", href: "/Sachal_Chandio_Resume.pdf" },
+    { label: (<><Icon name="github" /> GitHub</>), href: profile.links.github, external: true },
+    { label: (<><Icon name="download" /> Résumé</>), href: "/Sachal_Chandio_Resume.pdf" },
   ];
+
+  // Glyphs label data, never decorate it: each metric and stack group maps to
+  // the system object it describes.
+  const metricIcon = (label: string) =>
+    /latenc/i.test(label) ? "pulse" :
+    /row/i.test(label) ? "data" :
+    /project/i.test(label) ? "cube" : "clock";
+  const stackIcon = (group: string): string =>
+    ({
+      "Languages": "braces",
+      "Backend & APIs": "api",
+      "Data & Caching": "data",
+      "Cloud & DevOps": "cloudnet",
+      "Frontend": "browser",
+      "Practices": "shield",
+    } as Record<string, string>)[group] ?? "server";
 
   return (
     <HeatProvider>
@@ -68,14 +85,15 @@ export default function Portfolio() {
             <p className="hero-summary">{profile.summary}</p>
             <div className="hero-cta">
               <a className="btn btn-solid btn-lg" href="#blueprint">See the systems →</a>
-              <a className="btn btn-ghost btn-lg" href="/Sachal_Chandio_Resume.pdf" download>Résumé ↓</a>
-              <a className="hero-link" href={profile.links.github} target="_blank" rel="noopener">GitHub ↗</a>
+              <a className="btn btn-ghost btn-lg" href="/Sachal_Chandio_Resume.pdf" download><Icon name="download" />Résumé</a>
+              <a className="hero-link" href={profile.links.github} target="_blank" rel="noopener"><Icon name="github" />GitHub <span aria-hidden="true">↗</span></a>
             </div>
           </Reveal>
 
           <Reveal className="hero-ingots" aria-label="In production">
             {metrics.map((m) => (
               <div className="ingot" key={m.label}>
+                <span className="ingot-ic" aria-hidden="true"><Icon name={metricIcon(m.label)} /></span>
                 <span className="ingot-num">
                   <span className="ingot-prefix">{m.prefix}</span>
                   <Counter target={m.value} />
@@ -208,7 +226,10 @@ export default function Portfolio() {
           <div className="stack-grid">
             {Object.entries(stack).map(([group, items]) => (
               <Reveal className="stack-group" key={group}>
-                <h3 className="stack-group-title">{group}</h3>
+                <h3 className="stack-group-title">
+                  <span className="stack-ic" aria-hidden="true"><Icon name={stackIcon(group)} /></span>
+                  {group}
+                </h3>
                 <ul className="chip-row">{items.map((it) => <li className="chip" key={it}>{it}</li>)}</ul>
               </Reveal>
             ))}
@@ -261,13 +282,33 @@ export default function Portfolio() {
               <span className="section-index">06</span>
               <h2>Let’s build something durable.</h2>
               <p>{profile.availability}. The fastest way to reach me is below.</p>
-              <div className="contact-links">
-                <a href={`mailto:${profile.email}`}>{profile.email}</a>
-                <a href={profile.links.linkedin} target="_blank" rel="noopener">LinkedIn</a>
-                <a href={profile.links.github} target="_blank" rel="noopener">GitHub</a>
-                <a href={youtube} target="_blank" rel="noopener">YouTube</a>
-                <a href="/Sachal_Chandio_Resume.pdf" download>Résumé (PDF)</a>
-              </div>
+              <ul className="contact-channels">
+                <li><a href={`mailto:${profile.email}`}>
+                  <span className="ch-ic" aria-hidden="true"><Icon name="mail" /></span>
+                  <span className="ch-tx"><b>Email</b><i>{profile.email}</i></span>
+                  <span className="ch-go" aria-hidden="true">→</span>
+                </a></li>
+                <li><a href={profile.links.github} target="_blank" rel="noopener">
+                  <span className="ch-ic" aria-hidden="true"><Icon name="github" /></span>
+                  <span className="ch-tx"><b>GitHub</b><i>@sachalchandio</i></span>
+                  <span className="ch-go" aria-hidden="true">↗</span>
+                </a></li>
+                <li><a href={profile.links.linkedin} target="_blank" rel="noopener">
+                  <span className="ch-ic" aria-hidden="true"><Icon name="linkedin" /></span>
+                  <span className="ch-tx"><b>LinkedIn</b><i>in/sachal-chandio</i></span>
+                  <span className="ch-go" aria-hidden="true">↗</span>
+                </a></li>
+                <li><a href={youtube} target="_blank" rel="noopener">
+                  <span className="ch-ic" aria-hidden="true"><Icon name="youtube" /></span>
+                  <span className="ch-tx"><b>YouTube</b><i>Building &amp; off-duty</i></span>
+                  <span className="ch-go" aria-hidden="true">↗</span>
+                </a></li>
+                <li><a href="/Sachal_Chandio_Resume.pdf" download>
+                  <span className="ch-ic" aria-hidden="true"><Icon name="file" /></span>
+                  <span className="ch-tx"><b>Résumé</b><i>PDF · download</i></span>
+                  <span className="ch-go" aria-hidden="true">↓</span>
+                </a></li>
+              </ul>
             </div>
             <ContactForm />
           </Reveal>
